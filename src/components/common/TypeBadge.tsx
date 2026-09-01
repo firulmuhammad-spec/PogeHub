@@ -79,30 +79,28 @@ export const TypeBadge: React.FC<TypeBadgeProps> = ({
     lg: 'w-4 h-4',
   };
 
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={!onClick}
-      className={`inline-flex items-center rounded-lg uppercase tracking-wider transition-all duration-200 shadow-sm ${
-        sizeClasses[size]
-      } ${
-        onClick
-          ? 'cursor-pointer hover:scale-105 active:scale-95'
-          : 'cursor-default'
-      } ${
-        selected
-          ? 'ring-2 ring-amber-400 shadow-amber-500/30 scale-105'
-          : ''
-      } ${className}`}
-      style={{
-        backgroundColor: details.color + '26', // 15% opacity background
-        borderColor: details.color,
-        borderWidth: '1px',
-        color: '#FFFFFF',
-        textShadow: '0 1px 2px rgba(0,0,0,0.8)',
-      }}
-    >
+  const commonClasses = `inline-flex items-center rounded-lg uppercase tracking-wider transition-all duration-200 shadow-sm ${
+    sizeClasses[size]
+  } ${
+    onClick
+      ? 'cursor-pointer hover:scale-105 active:scale-95'
+      : 'cursor-default'
+  } ${
+    selected
+      ? 'ring-2 ring-amber-400 shadow-amber-500/30 scale-105'
+      : ''
+  } ${className}`;
+
+  const styleObj = {
+    backgroundColor: details.color + '26', // 15% opacity background
+    borderColor: details.color,
+    borderWidth: '1px',
+    color: '#FFFFFF',
+    textShadow: '0 1px 2px rgba(0,0,0,0.8)',
+  };
+
+  const content = (
+    <>
       <span
         className="inline-flex items-center justify-center p-0.5 rounded"
         style={{ backgroundColor: details.color }}
@@ -115,6 +113,25 @@ export const TypeBadge: React.FC<TypeBadgeProps> = ({
           ({details.nameId})
         </span>
       )}
-    </button>
+    </>
+  );
+
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        className={commonClasses}
+        style={styleObj}
+      >
+        {content}
+      </button>
+    );
+  }
+
+  return (
+    <span className={commonClasses} style={styleObj}>
+      {content}
+    </span>
   );
 };

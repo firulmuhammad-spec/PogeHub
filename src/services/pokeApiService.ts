@@ -1,6 +1,7 @@
 import { PokemonType, RaidBossData, RecommendedCounter } from '../types/pokemon';
 import { calculateDefenderEffectiveness } from '../data/pokemonTypes';
 import { POPULAR_POKEMON_LIST, findPokemonByNameOrDex } from '../data/pokemonList';
+import { getPokemonBaseStats, calculateRaidCounterPowerScore } from '../data/pokemonStats';
 
 // In-memory cache for fast responsive tab switching
 const pokemonCache = new Map<string, RaidBossData>();
@@ -52,7 +53,7 @@ const TYPE_BEST_MOVES: Record<PokemonType, { fast: string; charged: string }> = 
   Fairy: { fast: 'Charm / Fairy Wind', charged: 'Dazzling Gleam / Moonblast' },
 };
 
-// Generates dynamic top counters based on the boss's type weaknesses
+// Generates dynamic top counters based on the boss's type weaknesses, sorted strictly by Power Score / Base Stats
 export function generateBestCounters(bossTypes: PokemonType[]): RecommendedCounter[] {
   const def1 = bossTypes[0] || 'Normal';
   const def2 = bossTypes[1] || null;
@@ -61,85 +62,109 @@ export function generateBestCounters(bossTypes: PokemonType[]): RecommendedCount
   const doubleWeak = grouped.doubleWeakness.map((w) => w.attackType);
   const singleWeak = grouped.weakness.map((w) => w.attackType);
 
-  const topCounters: RecommendedCounter[] = [];
+  const counterCandidates: RecommendedCounter[] = [];
+  const addedDexes = new Set<number>();
 
-  // Priority 1: Double Weakness attackers
-  if (doubleWeak.length > 0) {
-    doubleWeak.forEach((atkType) => {
-      const matchingMon = POPULAR_POKEMON_LIST.filter((p) => p.types.includes(atkType));
-      matchingMon.slice(0, 4).forEach((p) => {
-        const moves = TYPE_BEST_MOVES[atkType] || { fast: 'Attack', charged: 'Power Move' };
-        topCounters.push({
-          name: p.name,
-          dexNumber: p.dex,
-          types: p.types,
-          fastMove: moves.fast,
-          fastMoveType: atkType,
-          chargedMove: moves.charged,
-          chargedMoveType: atkType,
-          effectiveness: 'Double Super Effective (2.56x)',
-          multiplier: 2.56,
-          isShadowAvailable: true,
-          isMegaAvailable: p.name.includes('Mega') || ['Charizard', 'Gengar', 'Rayquaza', 'Lucario', 'Garchomp', 'Tyranitar', 'Gardevoir'].includes(p.name),
-        });
+  // Process Double Weakness (2.56x) first
+  doubleWeak.forEach((atkType) => {
+    const matchingMon = POPULAR_POKEMON_LIST.filter((p) => p.types.includes(atkType));
+    matchingMon.forEach((p) => {
+      if (addedDexes.has(p.dex)) return;
+      addedDexes.add(p.dex);
+
+      const moves = TYPE_BEST_MOVES[atkType] || { fast: 'Tackle', charged: 'Power Move' };
+      const stats = getPokemonBaseStats(p.dex, p.name, p.types, p.isLegendary, p.isMythical, p.isMega);
+      const isMega = !!(p.isMega || ['Charizard', 'Gengar', 'Rayquaza', 'Lucario', 'Garchomp', 'Tyranitar', 'Gardevoir', 'Swampert', 'Blaziken', 'Sceptile', 'Metagross', 'Salamence', 'Alakazam', 'Diancie'].includes(p.name));
+      const hasStab = p.types.includes(atkType);
+      
+      const { score, rankTier } = calculateRaidCounterPowerScore(stats, 2.56, hasStab, false, isMega);
+
+      counterCandidates.push({
+        name: p.name,
+        dexNumber: p.dex,
+        types: p.types,
+        fastMove: moves.fast,
+        fastMoveType: atkType,
+        chargedMove: moves.charged,
+        chargedMoveType: atkType,
+        effectiveness: 'Double Super Effective (2.56x)',
+        multiplier: 2.56,
+        attack: stats.attack,
+        defense: stats.defense,
+        stamina: stats.stamina,
+        maxCp: stats.maxCp,
+        powerScore: score,
+        rankTier,
+        isShadowAvailable: true,
+        isMegaAvailable: isMega,
       });
     });
-  }
+  });
 
-  // Priority 2: Single Weakness attackers
-  if (topCounters.length < 8 && singleWeak.length > 0) {
-    singleWeak.forEach((atkType) => {
-      const matchingMon = POPULAR_POKEMON_LIST.filter(
-        (p) => p.types.includes(atkType) && !topCounters.some((tc) => tc.dexNumber === p.dex)
-      );
-      matchingMon.slice(0, 3).forEach((p) => {
-        const moves = TYPE_BEST_MOVES[atkType] || { fast: 'Attack', charged: 'Special Move' };
-        topCounters.push({
-          name: p.name,
-          dexNumber: p.dex,
-          types: p.types,
-          fastMove: moves.fast,
-          fastMoveType: atkType,
-          chargedMove: moves.charged,
-          chargedMoveType: atkType,
-          effectiveness: 'Super Effective (1.6x)',
-          multiplier: 1.6,
-          isShadowAvailable: true,
-          isMegaAvailable: ['Swampert', 'Blaziken', 'Sceptile', 'Metagross', 'Salamence', 'Alakazam'].includes(p.name),
-        });
+  // Process Single Weakness (1.6x)
+  singleWeak.forEach((atkType) => {
+    const matchingMon = POPULAR_POKEMON_LIST.filter((p) => p.types.includes(atkType));
+    matchingMon.forEach((p) => {
+      if (addedDexes.has(p.dex)) return;
+      addedDexes.add(p.dex);
+
+      const moves = TYPE_BEST_MOVES[atkType] || { fast: 'Tackle', charged: 'Special Move' };
+      const stats = getPokemonBaseStats(p.dex, p.name, p.types, p.isLegendary, p.isMythical, p.isMega);
+      const isMega = !!(p.isMega || ['Charizard', 'Gengar', 'Rayquaza', 'Lucario', 'Garchomp', 'Tyranitar', 'Gardevoir', 'Swampert', 'Blaziken', 'Sceptile', 'Metagross', 'Salamence', 'Alakazam', 'Diancie'].includes(p.name));
+      const hasStab = p.types.includes(atkType);
+
+      const { score, rankTier } = calculateRaidCounterPowerScore(stats, 1.6, hasStab, false, isMega);
+
+      counterCandidates.push({
+        name: p.name,
+        dexNumber: p.dex,
+        types: p.types,
+        fastMove: moves.fast,
+        fastMoveType: atkType,
+        chargedMove: moves.charged,
+        chargedMoveType: atkType,
+        effectiveness: 'Super Effective (1.6x)',
+        multiplier: 1.6,
+        attack: stats.attack,
+        defense: stats.defense,
+        stamina: stats.stamina,
+        maxCp: stats.maxCp,
+        powerScore: score,
+        rankTier,
+        isShadowAvailable: true,
+        isMegaAvailable: isMega,
       });
     });
-  }
+  });
 
   // Fallback if none found
-  if (topCounters.length === 0) {
-    topCounters.push(
-      {
-        name: 'Mewtwo',
-        dexNumber: 150,
-        types: ['Psychic'],
-        fastMove: 'Psycho Cut',
-        fastMoveType: 'Psychic',
-        chargedMove: 'Psystrike',
-        chargedMoveType: 'Psychic',
-        effectiveness: 'Super Effective (1.6x)',
-        multiplier: 1.6,
-      },
-      {
-        name: 'Dragonite',
-        dexNumber: 149,
-        types: ['Dragon', 'Flying'],
-        fastMove: 'Dragon Tail',
-        fastMoveType: 'Dragon',
-        chargedMove: 'Outrage',
-        chargedMoveType: 'Dragon',
-        effectiveness: 'Super Effective (1.6x)',
-        multiplier: 1.6,
-      }
-    );
+  if (counterCandidates.length === 0) {
+    const mStats = getPokemonBaseStats(150, 'Mewtwo', ['Psychic'], true);
+    const { score: mScore, rankTier: mTier } = calculateRaidCounterPowerScore(mStats, 1.6, true, false, false);
+    counterCandidates.push({
+      name: 'Mewtwo',
+      dexNumber: 150,
+      types: ['Psychic'],
+      fastMove: 'Psycho Cut',
+      fastMoveType: 'Psychic',
+      chargedMove: 'Psystrike',
+      chargedMoveType: 'Psychic',
+      effectiveness: 'Super Effective (1.6x)',
+      multiplier: 1.6,
+      attack: mStats.attack,
+      defense: mStats.defense,
+      stamina: mStats.stamina,
+      maxCp: mStats.maxCp,
+      powerScore: mScore,
+      rankTier: mTier,
+      isShadowAvailable: true,
+    });
   }
 
-  return topCounters.slice(0, 10);
+  // Sort strictly by powerScore (highest attack / DPS / damage output first)
+  counterCandidates.sort((a, b) => (b.powerScore || 0) - (a.powerScore || 0));
+
+  return counterCandidates.slice(0, 24);
 }
 
 export async function fetchRaidBossData(pokemonQuery: string): Promise<RaidBossData> {

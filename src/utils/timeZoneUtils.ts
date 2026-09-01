@@ -1,6 +1,58 @@
 import { CoordinateSpot, HoppingScheduleItem } from '../types/pokemon';
 
 /**
+ * Calculates timezone offset in minutes from UTC for a specific IANA timezone at a specific point in time.
+ * Uses Intl.DateTimeFormat parts to ensure 100% browser-timezone independence.
+ */
+export function getTimeZoneOffsetMinutes(timeZone: string, date: Date = new Date()): number {
+  try {
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone,
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      hour12: false,
+    });
+
+    const parts = formatter.formatToParts(date);
+    let pYear = 0, pMonth = 0, pDay = 0, pHour = 0, pMin = 0, pSec = 0;
+
+    for (const p of parts) {
+      if (p.type === 'year') pYear = parseInt(p.value, 10);
+      if (p.type === 'month') pMonth = parseInt(p.value, 10);
+      if (p.type === 'day') pDay = parseInt(p.value, 10);
+      if (p.type === 'hour') pHour = parseInt(p.value, 10);
+      if (p.type === 'minute') pMin = parseInt(p.value, 10);
+      if (p.type === 'second') pSec = parseInt(p.value, 10);
+    }
+
+    const localUtcTimestamp = Date.UTC(pYear, pMonth - 1, pDay, pHour % 24, pMin, pSec);
+    const actualUtcTimestamp = date.getTime();
+    return Math.round((localUtcTimestamp - actualUtcTimestamp) / 60000);
+  } catch (e) {
+    return 420; // fallback to UTC+7
+  }
+}
+
+/**
+ * Formats offset minutes into standard readable string e.g. "UTC+7", "UTC-4", "UTC+5:30", "UTC+0"
+ */
+export function formatUtcOffset(offsetMinutes: number): string {
+  const sign = offsetMinutes >= 0 ? '+' : '-';
+  const absMinutes = Math.abs(offsetMinutes);
+  const hours = Math.floor(absMinutes / 60);
+  const remainingMinutes = absMinutes % 60;
+
+  if (remainingMinutes === 0) {
+    return `UTC${sign}${hours}`;
+  }
+  return `UTC${sign}${hours}:${String(remainingMinutes).padStart(2, '0')}`;
+}
+
+/**
  * Formats current time in specific IANA timeZone
  */
 export function getLiveTimeInZone(timeZone: string, now: Date = new Date()): {
@@ -8,6 +60,7 @@ export function getLiveTimeInZone(timeZone: string, now: Date = new Date()): {
   dateStr: string;
   isNight: boolean;
   offsetMinutes: number;
+  utcOffsetStr: string;
 } {
   try {
     const timeFormatter = new Intl.DateTimeFormat('id-ID', {
@@ -34,39 +87,38 @@ export function getLiveTimeInZone(timeZone: string, now: Date = new Date()): {
     const hour = parseInt(hourFormatter.format(now), 10);
     const isNight = hour >= 20 || hour < 6;
 
-    // Calculate offset relative to UTC
-    const utcDate = new Date(now.toLocaleString('en-US', { timeZone: 'UTC' }));
-    const targetDate = new Date(now.toLocaleString('en-US', { timeZone }));
-    const offsetMinutes = Math.round((targetDate.getTime() - utcDate.getTime()) / 60000);
+    const offsetMinutes = getTimeZoneOffsetMinutes(timeZone, now);
+    const utcOffsetStr = formatUtcOffset(offsetMinutes);
 
     return {
       timeStr: timeFormatter.format(now),
       dateStr: dateFormatter.format(now),
       isNight,
       offsetMinutes,
+      utcOffsetStr,
     };
   } catch (e) {
     return {
       timeStr: now.toLocaleTimeString('id-ID'),
       dateStr: now.toLocaleDateString('id-ID'),
       isNight: false,
-      offsetMinutes: 420, // default UTC+7
+      offsetMinutes: 420,
+      utcOffsetStr: 'UTC+7',
     };
   }
 }
 
 /**
- * Calculates timezone offset difference compared to WIB (Asia/Jakarta = UTC+7)
+ * Calculates timezone difference compared to WIB (Asia/Jakarta = UTC+7) in hours.
+ * e.g. Tokyo (UTC+9) vs WIB (UTC+7) = +2 Jam
+ * e.g. New York (UTC-4) vs WIB (UTC+7) = -11 Jam
+ * e.g. Jakarta (UTC+7) vs WIB (UTC+7) = 0 Jam
  */
 export function getTimeDiffFromWibHours(timeZone: string, now: Date = new Date()): number {
-  try {
-    const wibDate = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Jakarta' }));
-    const targetDate = new Date(now.toLocaleString('en-US', { timeZone }));
-    const diffHours = (targetDate.getTime() - wibDate.getTime()) / (1000 * 60 * 60);
-    return Math.round(diffHours * 10) / 10;
-  } catch (e) {
-    return 0;
-  }
+  const spotOffsetMin = getTimeZoneOffsetMinutes(timeZone, now);
+  const wibOffsetMin = 420; // UTC+7 = 420 minutes
+  const diffHours = (spotOffsetMin - wibOffsetMin) / 60;
+  return Math.round(diffHours * 10) / 10;
 }
 
 /**
@@ -85,29 +137,27 @@ export function calculateGlobalHoppingSchedule(
 
   const now = new Date();
 
-  // Create formatted target year/month/day
   const year = baseDate.getFullYear();
-  const month = String(baseDate.getMonth() + 1).padStart(2, '0');
-  const day = String(baseDate.getDate()).padStart(2, '0');
+  const month = baseDate.getMonth(); // 0-indexed
+  const day = baseDate.getDate();
 
   const items: HoppingScheduleItem[] = spots.map((spot) => {
     try {
-      // Find the UTC timestamp when it is startHour:startMin in `spot.timeZone`
-      // We test a candidate UTC date and adjust by timezone difference
-      const isoCandidate = `${year}-${month}-${day}T${String(startHour).padStart(2, '0')}:${String(startMin).padStart(2, '0')}:00`;
+      // 1. Initial candidate UTC timestamp if wall-clock was UTC
+      const candidateUtcMs = Date.UTC(year, month, day, startHour, startMin, 0);
       
-      // Compute UTC offset of spot on this date
-      const testUtc = new Date(isoCandidate + 'Z');
-      const spotDateStr = testUtc.toLocaleString('en-US', { timeZone: spot.timeZone });
-      const spotDateObj = new Date(spotDateStr);
+      // 2. Find exact offset of this spot's timezone at that candidate time
+      const spotOffsetMin = getTimeZoneOffsetMinutes(spot.timeZone, new Date(candidateUtcMs));
       
-      const offsetMs = spotDateObj.getTime() - testUtc.getTime();
-      const actualEventStartUtcMs = testUtc.getTime() - offsetMs;
+      // 3. True event start UTC timestamp:
+      // When wall-clock in spot.timeZone is 14:00, UTC time is 14:00 minus spotOffset
+      const actualEventStartUtcMs = candidateUtcMs - spotOffsetMin * 60000;
+      const actualEventEndUtcMs = actualEventStartUtcMs + durationHours * 3600000;
 
       const eventStartDate = new Date(actualEventStartUtcMs);
-      const eventEndDate = new Date(actualEventStartUtcMs + durationHours * 60 * 60 * 1000);
+      const eventEndDate = new Date(actualEventEndUtcMs);
 
-      // Convert eventStartDate to WIB
+      // 4. Format event time in WIB (Asia/Jakarta)
       const wibTimeFormatter = new Intl.DateTimeFormat('id-ID', {
         timeZone: 'Asia/Jakarta',
         hour: '2-digit',
@@ -126,23 +176,25 @@ export function calculateGlobalHoppingSchedule(
       const wibEnd = wibTimeFormatter.format(eventEndDate);
       const wibDateStr = wibDateFormatter.format(eventStartDate);
 
-      // Local end calculation
-      const endHour = (startHour + durationHours) % 24;
-      const localEnd = `${String(endHour).padStart(2, '0')}:${String(startMin).padStart(2, '0')}`;
+      // 5. Local end formatted string
+      const endTotalMin = startHour * 60 + startMin + durationHours * 60;
+      const endHour = Math.floor(endTotalMin / 60) % 24;
+      const endMin = endTotalMin % 60;
+      const localEnd = `${String(endHour).padStart(2, '0')}:${String(endMin).padStart(2, '0')}`;
 
-      // Status calculation
+      // 6. Live status calculation
       const nowMs = now.getTime();
       let status: 'live' | 'upcoming' | 'ended' = 'upcoming';
       let timeUntilOrRemaining = '';
 
-      if (nowMs >= actualEventStartUtcMs && nowMs <= eventEndDate.getTime()) {
+      if (nowMs >= actualEventStartUtcMs && nowMs <= actualEventEndUtcMs) {
         status = 'live';
-        const remMs = eventEndDate.getTime() - nowMs;
+        const remMs = actualEventEndUtcMs - nowMs;
         const remMins = Math.floor(remMs / 60000);
         const remH = Math.floor(remMins / 60);
         const remM = remMins % 60;
         timeUntilOrRemaining = `Sisa ${remH > 0 ? `${remH}j ` : ''}${remM}m`;
-      } else if (nowMs > eventEndDate.getTime()) {
+      } else if (nowMs > actualEventEndUtcMs) {
         status = 'ended';
         timeUntilOrRemaining = 'Telah Berakhir';
       } else {
@@ -161,7 +213,8 @@ export function calculateGlobalHoppingSchedule(
         }
       }
 
-      const diffWibHours = getTimeDiffFromWibHours(spot.timeZone, now);
+      const diffWibHours = (spotOffsetMin - 420) / 60;
+      const utcOffsetStr = formatUtcOffset(spotOffsetMin);
 
       return {
         spot,
@@ -170,14 +223,15 @@ export function calculateGlobalHoppingSchedule(
         wibStart,
         wibEnd,
         wibDateStr,
+        utcOffsetStr,
+        utcOffsetMinutes: spotOffsetMin,
         startTimestampWib: actualEventStartUtcMs,
-        endTimestampWib: eventEndDate.getTime(),
+        endTimestampWib: actualEventEndUtcMs,
         status,
         timeUntilOrRemaining,
-        timeDifferenceWibHours: diffWibHours,
+        timeDifferenceWibHours: Math.round(diffWibHours * 10) / 10,
       };
     } catch (e) {
-      // Fallback
       return {
         spot,
         localStart: localStartTimeStr,
@@ -185,6 +239,8 @@ export function calculateGlobalHoppingSchedule(
         wibStart: '14:00',
         wibEnd: '17:00',
         wibDateStr: 'Hari Ini',
+        utcOffsetStr: 'UTC+7',
+        utcOffsetMinutes: 420,
         startTimestampWib: Date.now(),
         endTimestampWib: Date.now() + 10800000,
         status: 'upcoming' as const,
@@ -194,7 +250,7 @@ export function calculateGlobalHoppingSchedule(
     }
   });
 
-  // Sort chronologically by startTimestampWib (Earliest in WIB to latest in WIB!)
+  // Sort chronologically: Earliest to start in WIB time first (e.g. Kiribati / NZ first, then Asia, Europe, Americas)
   items.sort((a, b) => a.startTimestampWib - b.startTimestampWib);
 
   return items;
@@ -240,6 +296,26 @@ export function calculateCoordinateDistanceKm(
 }
 
 /**
+ * Parses user input like "-6.2088, 106.8456" or "-6.2088 106.8456" into { lat: number, lng: number } or null
+ */
+export function parseCoordinateInput(input: string): { lat: number; lng: number } | null {
+  if (!input) return null;
+  const clean = input.trim().replace(/[°\s]+/g, ' ');
+  const parts = clean.includes(',')
+    ? clean.split(',').map((s) => s.trim())
+    : clean.split(' ').map((s) => s.trim()).filter(Boolean);
+
+  if (parts.length >= 2) {
+    const lat = parseFloat(parts[0]);
+    const lng = parseFloat(parts[1]);
+    if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
+      return { lat, lng };
+    }
+  }
+  return null;
+}
+
+/**
  * Calculates required Pokémon GO cooldown in seconds based on distance (km)
  */
 export function calculateRequiredCooldownSec(distanceKm: number): {
@@ -249,37 +325,18 @@ export function calculateRequiredCooldownSec(distanceKm: number): {
   if (distanceKm <= 0) {
     return { seconds: 0, formattedText: '0 detik (Lokasi sama)' };
   }
-  if (distanceKm <= 1) return { seconds: 30, formattedText: '30 detik' };
-  if (distanceKm <= 2) return { seconds: 60, formattedText: '1 menit' };
-  if (distanceKm <= 5) return { seconds: 120, formattedText: '2 menit' };
-  if (distanceKm <= 10) return { seconds: 360, formattedText: '6 menit' };
-  if (distanceKm <= 15) return { seconds: 480, formattedText: '8 menit' };
-  if (distanceKm <= 25) return { seconds: 660, formattedText: '11 menit' };
-  if (distanceKm <= 40) return { seconds: 900, formattedText: '15 menit' };
-  if (distanceKm <= 50) return { seconds: 1200, formattedText: '20 menit' };
-  if (distanceKm <= 65) return { seconds: 1500, formattedText: '25 menit' };
-  if (distanceKm <= 100) return { seconds: 2400, formattedText: '40 menit' };
-  if (distanceKm <= 250) return { seconds: 2700, formattedText: '45 menit' };
-  if (distanceKm <= 500) return { seconds: 3600, formattedText: '60 menit (1 Jam)' };
-  if (distanceKm <= 750) return { seconds: 4500, formattedText: '75 menit (1.25 Jam)' };
-  if (distanceKm <= 1000) return { seconds: 5400, formattedText: '90 menit (1.5 Jam)' };
-  if (distanceKm <= 1350) return { seconds: 6300, formattedText: '105 menit (1.75 Jam)' };
-  return { seconds: 7200, formattedText: '120 menit (2 Jam - Maksimal)' };
-}
 
-/**
- * Parses user input coordinate string like "-6.2088, 106.8456" or "-6.2088 106.8456"
- */
-export function parseCoordinateInput(input: string): { lat: number; lng: number } | null {
-  if (!input || !input.trim()) return null;
-  const cleaned = input.trim().replace(/[°\(\)\[\]]/g, '');
-  const parts = cleaned.split(/[\s,]+/);
-  if (parts.length >= 2) {
-    const lat = parseFloat(parts[0]);
-    const lng = parseFloat(parts[1]);
-    if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
-      return { lat, lng };
+  for (const step of POGO_COOLDOWN_CHART) {
+    if (distanceKm <= step.maxKm) {
+      return {
+        seconds: step.cooldownSec,
+        formattedText: step.cooldown,
+      };
     }
   }
-  return null;
+
+  return {
+    seconds: 7200,
+    formattedText: '120 menit (2 Jam Maksimal)',
+  };
 }

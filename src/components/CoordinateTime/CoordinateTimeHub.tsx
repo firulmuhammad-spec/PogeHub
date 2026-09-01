@@ -560,6 +560,7 @@ export const CoordinateTimeHub: React.FC = () => {
                 <thead>
                   <tr className="border-b border-slate-800 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                     <th className="py-3 px-3">No & Lokasi Hotspot</th>
+                    <th className="py-3 px-3 text-cyan-400">Zona UTC & Selisih</th>
                     <th className="py-3 px-3">Jam Lokal</th>
                     <th className="py-3 px-3 text-amber-400">Jadwal di WIB (UTC+7)</th>
                     <th className="py-3 px-3">Status Event</th>
@@ -609,9 +610,36 @@ export const CoordinateTimeHub: React.FC = () => {
                           </div>
                         </td>
 
+                        {/* UTC Offset & Difference vs WIB */}
+                        <td className="py-3 px-3 font-mono">
+                          <div className="flex items-center gap-1.5">
+                            <span className="px-2 py-0.5 rounded text-xs font-bold bg-indigo-950/80 text-indigo-300 border border-indigo-700/60">
+                              {item.utcOffsetStr}
+                            </span>
+                            <span
+                              className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                                item.timeDifferenceWibHours === 0
+                                  ? 'bg-emerald-950/80 text-emerald-400 border border-emerald-800/80'
+                                  : item.timeDifferenceWibHours > 0
+                                  ? 'bg-cyan-950/80 text-cyan-400 border border-cyan-800/80'
+                                  : 'bg-amber-950/80 text-amber-400 border border-amber-800/80'
+                              }`}
+                            >
+                              {item.timeDifferenceWibHours === 0
+                                ? '0j (WIB)'
+                                : item.timeDifferenceWibHours > 0
+                                ? `+${item.timeDifferenceWibHours}j vs WIB`
+                                : `${item.timeDifferenceWibHours}j vs WIB`}
+                            </span>
+                          </div>
+                          <div className="text-[10px] text-slate-500 mt-0.5 truncate max-w-[140px]" title={item.spot.timeZone}>
+                            {item.spot.timeZone}
+                          </div>
+                        </td>
+
                         <td className="py-3 px-3 font-mono text-slate-300">
-                          <div>{item.localStart} - {item.localEnd}</div>
-                          <div className="text-[10px] text-slate-500">{item.spot.timeZone}</div>
+                          <div className="font-semibold text-slate-200">{item.localStart} - {item.localEnd}</div>
+                          <div className="text-[10px] text-slate-400">Waktu Kota Setempat</div>
                         </td>
 
                         <td className="py-3 px-3 font-mono">

@@ -94,6 +94,12 @@ export interface RecommendedCounter {
   chargedMoveType: PokemonType;
   effectiveness: 'Double Super Effective (2.56x)' | 'Super Effective (1.6x)';
   multiplier: number;
+  attack?: number;
+  defense?: number;
+  stamina?: number;
+  maxCp?: number;
+  powerScore?: number;
+  rankTier?: 'S+' | 'S' | 'A+' | 'A' | 'B';
   isShadowAvailable?: boolean;
   isMegaAvailable?: boolean;
 }
@@ -127,9 +133,11 @@ export interface HoppingScheduleItem {
   wibStart: string;
   wibEnd: string;
   wibDateStr: string;
+  utcOffsetStr: string; // e.g. "UTC+7", "UTC-4", "UTC+12"
+  utcOffsetMinutes: number; // in minutes
   startTimestampWib: number;
   endTimestampWib: number;
   status: 'live' | 'upcoming' | 'ended';
   timeUntilOrRemaining: string;
-  timeDifferenceWibHours: number;
+  timeDifferenceWibHours: number; // Difference compared to WIB (UTC+7)
 }

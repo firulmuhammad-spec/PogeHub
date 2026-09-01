@@ -1,0 +1,6 @@
+{
+  "name": "PokéGO Master Hub",
+  "description": "Aplikasi pendamping dan pengelola data Pokémon GO: Type Effectiveness Calculator, Koleksi IV 100% & Shiny, Counter Raid Boss otomatis (PokéAPI), dan Live Coordinate Book & Global Event Converter.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

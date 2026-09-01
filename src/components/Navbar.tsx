@@ -10,6 +10,8 @@ import {
   Flame,
   Activity,
   Terminal,
+  Smartphone,
+  Download,
 } from 'lucide-react';
 
 export type ActiveTab = 'types' | 'storage' | 'raids' | 'coordinates';
@@ -24,6 +26,7 @@ interface NavbarProps {
     shundos: number;
   };
   onOpenHelp: () => void;
+  onOpenInstallPwa: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -31,6 +34,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   setActiveTab,
   storageStats,
   onOpenHelp,
+  onOpenInstallPwa,
 }) => {
   const navTabs = [
     {
@@ -117,6 +121,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
                 <span>{storageStats.shinies} ✨</span>
               </div>
+            </button>
+
+            {/* Install PWA Button */}
+            <button
+              onClick={onOpenInstallPwa}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white text-xs font-bold shadow-[0_0_12px_rgba(79,70,229,0.5)] transition cursor-pointer font-mono uppercase tracking-wider"
+              title="Install aplikasi ke HP / Komputer (PWA)"
+            >
+              <Smartphone className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">INSTALL APP</span>
+              <span className="sm:hidden text-[10px]">PWA</span>
             </button>
 
             {/* Help / Guide Trigger */}

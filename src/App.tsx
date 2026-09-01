@@ -5,6 +5,8 @@ import { StorageManager } from './components/StorageChecklist/StorageManager';
 import { RaidBossCounters } from './components/RaidBoss/RaidBossCounters';
 import { CoordinateTimeHub } from './components/CoordinateTime/CoordinateTimeHub';
 import { InstructionsModal } from './components/InstructionsModal';
+import { PwaInstallModal } from './components/PwaInstallModal';
+import { SplashScreen } from './components/SplashScreen';
 import {
   Zap,
   PackageCheck,
@@ -16,13 +18,33 @@ import {
   Terminal,
   Activity,
   Cpu,
+  Smartphone,
 } from 'lucide-react';
 
 const STORAGE_KEY = 'pokego_master_storage_v1';
+const SPLASH_SEEN_KEY = 'pokego_splash_seen_session';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('types');
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isPwaModalOpen, setIsPwaModalOpen] = useState(false);
+  
+  // Initial splash screen check
+  const [showSplash, setShowSplash] = useState(() => {
+    // Show splash screen on first load per session
+    try {
+      const seen = sessionStorage.getItem(SPLASH_SEEN_KEY);
+      if (!seen) {
+        sessionStorage.setItem(SPLASH_SEEN_KEY, 'true');
+        return true;
+      }
+    } catch {
+      // fallback
+    }
+    return false;
+  });
+
+  const [isManualSplashPreview, setIsManualSplashPreview] = useState(false);
 
   // Storage Stats for quick Navbar display
   const [storageStats, setStorageStats] = useState(() => {
@@ -62,6 +84,17 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white relative overflow-x-hidden" style={{ backgroundColor: '#020617' }}>
+      {/* High Quality Splash Screen Component */}
+      {(showSplash || isManualSplashPreview) && (
+        <SplashScreen
+          onDismiss={() => {
+            setShowSplash(false);
+            setIsManualSplashPreview(false);
+          }}
+          isManualPreview={isManualSplashPreview}
+        />
+      )}
+
       {/* Immersive HUD Ambient Glows */}
       <div className="fixed top-0 left-1/4 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[160px] pointer-events-none -z-10"></div>
       <div className="fixed top-1/3 right-1/4 w-[400px] h-[400px] bg-violet-600/10 rounded-full blur-[150px] pointer-events-none -z-10"></div>
@@ -73,6 +106,7 @@ export default function App() {
         setActiveTab={setActiveTab}
         storageStats={storageStats}
         onOpenHelp={() => setIsHelpOpen(true)}
+        onOpenInstallPwa={() => setIsPwaModalOpen(true)}
       />
 
       {/* Main Content Area */}
@@ -105,22 +139,37 @@ export default function App() {
             </div>
             <span className="text-slate-800">|</span>
             <div className="flex items-center gap-1">
-              <span>LATENCY: <span className="text-emerald-400 font-bold">24MS</span></span>
+              <Smartphone className="w-3 h-3 text-indigo-400" />
+              <span>PWA: <span className="text-emerald-400 font-bold">STANDALONE_READY</span></span>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
             <button
+              onClick={() => setIsPwaModalOpen(true)}
+              className="hover:text-indigo-300 text-slate-400 transition cursor-pointer flex items-center gap-1.5 uppercase font-bold tracking-wider hover:underline"
+            >
+              <Smartphone className="w-3.5 h-3.5 text-indigo-400" /> Install PWA
+            </button>
+            <span className="text-slate-800">|</span>
+            <button
               onClick={() => setIsHelpOpen(true)}
               className="hover:text-indigo-400 text-slate-400 transition cursor-pointer flex items-center gap-1.5 uppercase font-bold tracking-wider hover:underline"
             >
-              <Terminal className="w-3.5 h-3.5 text-indigo-400" /> Guide & Vercel Deploy
+              <Terminal className="w-3.5 h-3.5 text-indigo-400" /> Guide & Deploy
             </button>
             <span className="text-slate-800">|</span>
             <span className="text-slate-500 uppercase tracking-widest">EST. 2024 POKÉDASH HUD</span>
           </div>
         </div>
       </footer>
+
+      {/* PWA Install Modal */}
+      <PwaInstallModal
+        isOpen={isPwaModalOpen}
+        onClose={() => setIsPwaModalOpen(false)}
+        onPreviewSplash={() => setIsManualSplashPreview(true)}
+      />
 
       {/* Panduan & Deployment Modal */}
       <InstructionsModal isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />

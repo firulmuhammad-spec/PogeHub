@@ -139,77 +139,87 @@ export const RaidBossCounters: React.FC = () => {
   const processedCounters = useMemo(() => {
     if (!selectedBoss?.bestCounters) return [];
 
-    let list = selectedBoss.bestCounters.map((counter) => {
-      const matchingOwned = getMatchingUserPokemon(counter.name, counter.dexNumber);
+    // 1. Map each counter with owned status and calculated power score
+    const mapped = selectedBoss.bestCounters.map((counter) => {
+      const ownedMatches = getMatchingUserPokemon(counter.name, counter.dexNumber);
+      const isOwned = ownedMatches.length > 0;
+      const bestOwned = isOwned
+        ? ownedMatches.sort((a, b) => (b.cp || 0) - (a.cp || 0))[0]
+        : null;
+
+      // Base stats weighting for raid strength
+      const atk = counter.attack || 220;
+      const def = counter.defense || 180;
+      const sta = counter.stamina || 180;
+      const mult = counter.multiplier || 1.6;
+
+      // PoGO Raid Power Index formula:
+      // (Attack * Multiplier^1.2) + (Def * 0.2 + Stamina * 0.2)
+      // Mega / S+ tier gets an extra bonus
+      const tierBonus = counter.rankTier === 'S+' ? 150 : counter.rankTier === 'S' ? 80 : counter.rankTier === 'A+' ? 40 : 0;
+      const calculatedScore = Math.round(atk * Math.pow(mult, 1.3) + def * 0.2 + sta * 0.2 + tierBonus);
+
       return {
         ...counter,
-        isOwned: matchingOwned.length > 0,
-        ownedPokemon: matchingOwned[0] || null,
-        ownedCount: matchingOwned.length,
+        isOwned,
+        ownedPokemon: bestOwned,
+        ownedCount: ownedMatches.length,
+        powerScore: calculatedScore,
       };
     });
 
-    // Apply filters
-    if (filterMode === 'owned') {
-      list = list.filter((c) => c.isOwned);
-    } else if (filterMode === 'double_weak') {
-      list = list.filter((c) => c.multiplier >= 2.5);
-    }
+    // 2. Filter by user active filters
+    const filtered = mapped.filter((c) => {
+      if (filterMode === 'owned' && !c.isOwned) return false;
+      if (filterMode === 'double_weak' && c.multiplier < 2.0) return false;
+      if (typeFilter !== 'all' && !c.types.includes(typeFilter)) return false;
+      return true;
+    });
 
-    if (typeFilter !== 'all') {
-      list = list.filter(
-        (c) =>
-          c.types.includes(typeFilter) ||
-          c.fastMoveType === typeFilter ||
-          c.chargedMoveType === typeFilter
-      );
-    }
-
-    // Sort logic: Owned Pokémon in checklist FIRST, then sorted by highest metric!
-    list.sort((a, b) => {
-      // 1. Owned status priority
+    // 3. Sort: Always prioritize OWNED first (if applicable), then by chosen stat/power
+    return filtered.sort((a, b) => {
+      // Primary: Owned status
       if (a.isOwned !== b.isOwned) {
         return a.isOwned ? -1 : 1;
       }
 
-      // 2. Metric sorting
+      // Secondary: Chosen sorting metric
       if (sortBy === 'attack') {
-        return (b.attack || 0) - (a.attack || 0);
+        const diff = (b.attack || 0) - (a.attack || 0);
+        if (diff !== 0) return diff;
+      } else if (sortBy === 'max_cp') {
+        const diff = (b.maxCp || 0) - (a.maxCp || 0);
+        if (diff !== 0) return diff;
       }
-      if (sortBy === 'max_cp') {
-        return (b.maxCp || 0) - (a.maxCp || 0);
-      }
-      // Default: Power Score (Combination of Base Attack, Multiplier, STAB, and Durability)
-      return (b.powerScore || 0) - (a.powerScore || 0);
-    });
 
-    return list;
+      // Default: Power Score (Strength in battle)
+      return b.powerScore - a.powerScore;
+    });
   }, [selectedBoss, userStorage, filterMode, typeFilter, sortBy]);
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      {/* Header Banner */}
-      <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-950 border border-indigo-500/40 shadow-2xl shadow-indigo-950/30 space-y-4">
+      {/* Search & Header Card - Pokémon GO Vibrant Banner */}
+      <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white shadow-md space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 text-indigo-400 font-bold text-xs uppercase tracking-widest font-mono mb-1">
-              <span className="w-1.5 h-3.5 bg-indigo-500 rounded-sm"></span>
-              <Swords className="w-3.5 h-3.5" /> PokéAPI Live Integration & Counter Matcher
+            <div className="flex items-center gap-1.5 text-emerald-100 font-bold text-xs uppercase tracking-wider mb-1">
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" /> PokéAPI Live Battle Matrix
             </div>
-            <h2 className="text-xl sm:text-2xl font-black text-slate-100 tracking-tight font-mono">
+            <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white">
               Raid Boss Counter & Info
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1">
+            <p className="text-xs sm:text-sm text-emerald-50 mt-1 max-w-2xl font-medium">
               Analisis statistik, artwork resmi, kelemahan fatal, dan pencocokan otomatis dengan daftar Pokémon yang Anda miliki di checklist.
             </p>
           </div>
         </div>
 
         {/* Search Bar & Quick Preset Chips */}
-        <div className="space-y-3 pt-2">
+        <div className="space-y-3 pt-1">
           <form onSubmit={handleSearchSubmit} className="flex gap-2">
             <div ref={searchContainerRef} className="relative flex-1">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-400 z-10" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 z-10" />
               <input
                 type="text"
                 value={searchQuery}
@@ -218,17 +228,17 @@ export const RaidBossCounters: React.FC = () => {
                   setIsDropdownOpen(true);
                 }}
                 onFocus={() => setIsDropdownOpen(true)}
-                placeholder="Ketik nama Pokémon (contoh: Mewtwo, Rayquaza, Kyogre, Lucario, Groudon)..."
-                className="w-full pl-10 pr-4 py-2.5 bg-slate-950 border border-indigo-500/30 rounded-xl text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-indigo-400 font-mono transition"
+                placeholder="Ketik nama Pokémon (contoh: Rayquaza, Mewtwo, Kyogre, Lucario, Groudon)..."
+                className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition"
                 autoComplete="off"
               />
 
               {/* Suggestions Dropdown */}
               {isDropdownOpen && suggestions.length > 0 && (
-                <div className="absolute left-0 right-0 top-full mt-1.5 bg-slate-900 border border-indigo-500/40 rounded-xl shadow-2xl z-50 overflow-hidden divide-y divide-slate-800/80 animate-in fade-in-50 duration-150">
-                  <div className="px-3 py-1.5 bg-slate-950/90 text-[10px] font-mono text-indigo-300 uppercase tracking-wider flex items-center justify-between border-b border-indigo-500/20">
+                <div className="absolute left-0 right-0 top-full mt-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl z-50 overflow-hidden divide-y divide-slate-100 dark:divide-slate-800 animate-in fade-in-50 duration-150">
+                  <div className="px-3 py-1.5 bg-slate-50 dark:bg-slate-800/80 text-[10px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center justify-between border-b border-slate-200 dark:border-slate-700">
                     <span>Saran Pokémon ({suggestions.length})</span>
-                    <span className="text-slate-500">Klik untuk memilih</span>
+                    <span className="text-slate-400">Klik untuk memilih</span>
                   </div>
                   <div className="max-h-60 overflow-y-auto">
                     {suggestions.map((pokemon) => (
@@ -236,7 +246,7 @@ export const RaidBossCounters: React.FC = () => {
                         key={pokemon.dex}
                         type="button"
                         onClick={() => handleSelectSuggestion(pokemon)}
-                        className="w-full px-3.5 py-2 flex items-center justify-between hover:bg-indigo-950/50 transition-colors text-left cursor-pointer group"
+                        className="w-full px-3.5 py-2 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer group"
                       >
                         <div className="flex items-center gap-2.5">
                           <img
@@ -246,10 +256,10 @@ export const RaidBossCounters: React.FC = () => {
                             loading="lazy"
                           />
                           <div>
-                            <div className="font-bold text-slate-100 text-xs sm:text-sm group-hover:text-indigo-300 transition-colors font-mono">
+                            <div className="font-bold text-slate-900 dark:text-slate-100 text-xs sm:text-sm group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors">
                               {pokemon.name}
                             </div>
-                            <div className="text-[10px] text-slate-400 font-mono">
+                            <div className="text-[10px] text-slate-500 dark:text-slate-400">
                               #{String(pokemon.dex).padStart(3, '0')}
                               {pokemon.isLegendary && ' • Legendary'}
                               {pokemon.isMythical && ' • Mythical'}
@@ -272,7 +282,7 @@ export const RaidBossCounters: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-[0_0_15px_rgba(79,70,229,0.35)] transition cursor-pointer flex items-center gap-2 font-mono uppercase tracking-wider shrink-0"
+              className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-black dark:bg-slate-800 dark:hover:bg-slate-700 text-white font-bold text-xs shadow-md transition cursor-pointer flex items-center gap-2 uppercase tracking-wider shrink-0"
             >
               {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
               <span>Analisis Boss</span>
@@ -281,8 +291,8 @@ export const RaidBossCounters: React.FC = () => {
 
           {/* Quick Boss Presets */}
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-[11px] font-semibold text-slate-400 self-center mr-1 flex items-center gap-1 font-mono uppercase tracking-wider">
-              <Flame className="w-3 h-3 text-indigo-400" />
+            <span className="text-[11px] font-bold text-emerald-100 self-center mr-1 flex items-center gap-1 uppercase tracking-wider">
+              <Flame className="w-3.5 h-3.5 text-amber-300" />
               Bos Populer:
             </span>
             {PRESET_RAID_BOSSES.map((b) => (
@@ -292,10 +302,10 @@ export const RaidBossCounters: React.FC = () => {
                   setSearchQuery(b.name);
                   loadBossData(b.name);
                 }}
-                className={`px-2.5 py-1 rounded-lg text-xs font-semibold border transition cursor-pointer font-mono ${
+                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
                   selectedBoss?.name.toLowerCase() === b.name.toLowerCase()
-                    ? 'bg-indigo-500/20 border-indigo-500 text-indigo-300 font-bold shadow-md shadow-indigo-500/20'
-                    : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                    ? 'bg-white text-emerald-900 shadow-sm'
+                    : 'bg-black/20 hover:bg-black/30 text-white border border-white/20'
                 }`}
               >
                 {b.displayName}
@@ -307,10 +317,10 @@ export const RaidBossCounters: React.FC = () => {
 
       {/* Error Message if Fetch Fails */}
       {error && (
-        <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-600/60 flex items-start gap-3 text-rose-200 text-xs sm:text-sm animate-in fade-in">
-          <AlertCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
+        <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-800 flex items-start gap-3 text-rose-900 dark:text-rose-200 text-xs sm:text-sm animate-in fade-in">
+          <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
           <div className="space-y-1">
-            <div className="font-bold text-rose-300">Pencarian Gagal</div>
+            <div className="font-bold">Pencarian Gagal</div>
             <div>{error}</div>
           </div>
         </div>
@@ -318,9 +328,9 @@ export const RaidBossCounters: React.FC = () => {
 
       {/* Loading Skeleton */}
       {loading && !selectedBoss && (
-        <div className="p-12 text-center rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4 animate-pulse">
-          <div className="w-12 h-12 rounded-full bg-slate-800 mx-auto"></div>
-          <div className="text-slate-400 text-xs">Menghubungkan ke PokéAPI & menganalisis elemen...</div>
+        <div className="p-12 text-center rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4 animate-pulse">
+          <div className="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-800 mx-auto"></div>
+          <div className="text-slate-600 dark:text-slate-400 text-xs font-medium">Menghubungkan ke PokéAPI & menganalisis elemen...</div>
         </div>
       )}
 
@@ -328,12 +338,11 @@ export const RaidBossCounters: React.FC = () => {
       {selectedBoss && !loading && (
         <div className="space-y-6">
           {/* Boss Overview Card */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-6">
+          <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
               {/* Artwork Box */}
-              <div className="md:col-span-4 flex flex-col items-center justify-center p-6 rounded-2xl bg-gradient-to-b from-slate-950 to-slate-900 border border-slate-800/80 relative overflow-hidden group">
-                <div className="absolute -top-12 -left-12 w-36 h-36 bg-rose-500/10 rounded-full blur-2xl"></div>
-                <div className="absolute top-2 right-2 px-2 py-0.5 rounded bg-slate-900/90 border border-slate-800 text-[10px] font-mono text-slate-400">
+              <div className="md:col-span-4 flex flex-col items-center justify-center p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 relative overflow-hidden group">
+                <div className="absolute top-2 right-2 px-2 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[10px] font-bold text-slate-600 dark:text-slate-400 font-mono">
                   #{String(selectedBoss.id).padStart(3, '0')}
                 </div>
 
@@ -341,11 +350,11 @@ export const RaidBossCounters: React.FC = () => {
                   src={selectedBoss.officialArtwork}
                   alt={selectedBoss.displayName}
                   referrerPolicy="no-referrer"
-                  className="w-44 h-44 sm:w-52 sm:h-52 object-contain drop-shadow-2xl group-hover:scale-105 transition-transform duration-300"
+                  className="w-44 h-44 sm:w-52 sm:h-52 object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300"
                 />
 
                 <div className="mt-3 text-center">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-950/80 border border-rose-600/60 text-rose-300 font-bold text-xs">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-100 dark:bg-rose-950/80 border border-rose-300 dark:border-rose-700 text-rose-800 dark:text-rose-300 font-bold text-xs">
                     <Flame className="w-3.5 h-3.5" />
                     {selectedBoss.tier} Raid Boss
                   </span>
@@ -354,13 +363,13 @@ export const RaidBossCounters: React.FC = () => {
 
               {/* Boss Information & Base Stats */}
               <div className="md:col-span-8 space-y-4">
-                <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-800">
+                <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
                   <div>
-                    <h3 className="text-2xl sm:text-3xl font-black text-slate-100 tracking-tight">
+                    <h3 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
                       {selectedBoss.displayName}
                     </h3>
                     <div className="flex items-center gap-2 mt-1.5">
-                      <span className="text-xs text-slate-400">Tipe Elemen:</span>
+                      <span className="text-xs text-slate-600 dark:text-slate-300 font-medium">Tipe Elemen:</span>
                       {selectedBoss.types.map((t) => (
                         <TypeBadge key={t} type={t} size="sm" showIndonesian />
                       ))}
@@ -368,60 +377,60 @@ export const RaidBossCounters: React.FC = () => {
                   </div>
 
                   {selectedBoss.height && selectedBoss.weight && (
-                    <div className="flex items-center gap-3 text-xs text-slate-400 font-mono bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800">
-                      <div>Tinggi: <span className="text-slate-200 font-bold">{selectedBoss.height}m</span></div>
-                      <div>Berat: <span className="text-slate-200 font-bold">{selectedBoss.weight}kg</span></div>
+                    <div className="flex items-center gap-3 text-xs text-slate-700 dark:text-slate-300 font-mono bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 font-semibold">
+                      <div>Tinggi: <span className="text-slate-900 dark:text-slate-100 font-bold">{selectedBoss.height}m</span></div>
+                      <div>Berat: <span className="text-slate-900 dark:text-slate-100 font-bold">{selectedBoss.weight}kg</span></div>
                     </div>
                   )}
                 </div>
 
                 {/* Base Stats Meters */}
                 <div className="space-y-2.5">
-                  <div className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between">
+                  <div className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center justify-between">
                     <span className="flex items-center gap-1.5">
-                      <Activity className="w-3.5 h-3.5 text-rose-400" />
+                      <Activity className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                       Statistik Dasar (PokéAPI Stats):
                     </span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                     {/* Attack */}
-                    <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5">
-                      <div className="flex justify-between text-slate-400">
+                    <div className="p-3 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1.5">
+                      <div className="flex justify-between text-slate-700 dark:text-slate-300 font-medium">
                         <span>Attack</span>
-                        <span className="text-rose-400 font-mono font-bold">{selectedBoss.baseStats.attack}</span>
+                        <span className="text-rose-700 dark:text-rose-400 font-mono font-bold">{selectedBoss.baseStats.attack}</span>
                       </div>
-                      <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                      <div className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-rose-500 to-orange-500 rounded-full"
+                          className="h-full bg-rose-500 rounded-full"
                           style={{ width: `${Math.min(100, (selectedBoss.baseStats.attack / 300) * 100)}%` }}
                         ></div>
                       </div>
                     </div>
 
                     {/* Defense */}
-                    <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5">
-                      <div className="flex justify-between text-slate-400">
+                    <div className="p-3 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1.5">
+                      <div className="flex justify-between text-slate-700 dark:text-slate-300 font-medium">
                         <span>Defense</span>
-                        <span className="text-cyan-400 font-mono font-bold">{selectedBoss.baseStats.defense}</span>
+                        <span className="text-cyan-700 dark:text-cyan-400 font-mono font-bold">{selectedBoss.baseStats.defense}</span>
                       </div>
-                      <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                      <div className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full"
+                          className="h-full bg-cyan-500 rounded-full"
                           style={{ width: `${Math.min(100, (selectedBoss.baseStats.defense / 300) * 100)}%` }}
                         ></div>
                       </div>
                     </div>
 
                     {/* Stamina / HP */}
-                    <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5">
-                      <div className="flex justify-between text-slate-400">
+                    <div className="p-3 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1.5">
+                      <div className="flex justify-between text-slate-700 dark:text-slate-300 font-medium">
                         <span>HP / Stamina</span>
-                        <span className="text-emerald-400 font-mono font-bold">{selectedBoss.baseStats.hp}</span>
+                        <span className="text-emerald-700 dark:text-emerald-400 font-mono font-bold">{selectedBoss.baseStats.hp}</span>
                       </div>
-                      <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                      <div className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full"
+                          className="h-full bg-emerald-500 rounded-full"
                           style={{ width: `${Math.min(100, (selectedBoss.baseStats.hp / 300) * 100)}%` }}
                         ></div>
                       </div>
@@ -431,7 +440,7 @@ export const RaidBossCounters: React.FC = () => {
 
                 {/* Weakness Summary Chips */}
                 <div className="pt-1">
-                  <div className="text-xs font-bold text-slate-300 mb-1.5">Target Serangan Terbaik:</div>
+                  <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mb-1.5">Target Serangan Terbaik:</div>
                   <div className="flex flex-wrap gap-2">
                     {effectiveness.doubleWeakness.map((w) => (
                       <div key={w.attackType} className="flex items-center gap-1">
@@ -459,12 +468,12 @@ export const RaidBossCounters: React.FC = () => {
           <div className="space-y-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
               <div>
-                <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-                  <Swords className="w-5 h-5 text-rose-400" />
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <Swords className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                   Rekomendasi Pokémon Penyerang Terbaik (Counters)
                 </h3>
-                <p className="text-xs text-slate-400">
-                  Diurutkan berdasarkan <span className="text-amber-300 font-semibold">Pokémon Milik Anda Terlebih Dahulu</span> lalu <span className="text-indigo-300 font-semibold">Stat Serangan & Skor Kekuatan Raid Tertinggi</span> (bukan ID Pokédex).
+                <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">
+                  Diurutkan berdasarkan <span className="text-amber-800 dark:text-amber-300 font-bold">Pokémon Milik Anda Terlebih Dahulu</span> lalu <span className="text-emerald-700 dark:text-emerald-400 font-bold">Stat Serangan & Skor Kekuatan Raid Tertinggi</span> (bukan ID Pokédex).
                 </p>
               </div>
 
@@ -472,9 +481,9 @@ export const RaidBossCounters: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowFormulaExplainer(!showFormulaExplainer)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-950/60 hover:bg-indigo-900/60 border border-indigo-500/30 text-indigo-300 text-xs font-semibold transition-all"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition-all cursor-pointer"
               >
-                <HelpCircle className="w-3.5 h-3.5" />
+                <HelpCircle className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                 <span>Bagaimana "Terkuat" Dihitung?</span>
                 {showFormulaExplainer ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
               </button>
@@ -482,68 +491,68 @@ export const RaidBossCounters: React.FC = () => {
 
             {/* Formula & Strongest Mechanics Explainer Accordion */}
             {showFormulaExplainer && (
-              <div className="p-4 rounded-2xl bg-indigo-950/40 border border-indigo-500/40 space-y-3 text-xs text-slate-300 animate-in fade-in duration-200">
-                <div className="flex items-center gap-2 text-amber-300 font-bold font-mono">
-                  <Trophy className="w-4 h-4" />
+              <div className="p-4 rounded-2xl bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 space-y-3 text-xs text-slate-800 dark:text-slate-200 animate-in fade-in duration-200">
+                <div className="flex items-center gap-2 text-emerald-900 dark:text-emerald-200 font-bold font-mono">
+                  <Trophy className="w-4 h-4 text-amber-500" />
                   STANDAR PERHITUNGAN POKÉMON TERKUAT (RAID POWER INDEX):
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 pt-1">
-                  <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1">
-                    <div className="flex items-center gap-1.5 font-bold text-rose-400">
+                  <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1">
+                    <div className="flex items-center gap-1.5 font-bold text-rose-700 dark:text-rose-400">
                       <Swords className="w-3.5 h-3.5" /> 1. Base Attack (DPS 70%)
                     </div>
-                    <p className="text-[11px] text-slate-400">
+                    <p className="text-[11px] text-slate-600 dark:text-slate-400 font-medium">
                       Stat Serangan Pokok adalah penentu tercepat menguras HP bos sebelum timer raid habis.
                     </p>
                   </div>
 
-                  <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1">
-                    <div className="flex items-center gap-1.5 font-bold text-amber-400">
+                  <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1">
+                    <div className="flex items-center gap-1.5 font-bold text-amber-700 dark:text-amber-400">
                       <Flame className="w-3.5 h-3.5" /> 2. Multiplier Tipe (2.56x / 1.6x)
                     </div>
-                    <p className="text-[11px] text-slate-400">
+                    <p className="text-[11px] text-slate-600 dark:text-slate-400 font-medium">
                       Kelemahan ganda (2.56x) melipatgandakan damage secara eksponensial dibanding kelemahan tunggal (1.6x).
                     </p>
                   </div>
 
-                  <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1">
-                    <div className="flex items-center gap-1.5 font-bold text-emerald-400">
+                  <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1">
+                    <div className="flex items-center gap-1.5 font-bold text-emerald-700 dark:text-emerald-400">
                       <Zap className="w-3.5 h-3.5" /> 3. STAB & Moveset (1.2x)
                     </div>
-                    <p className="text-[11px] text-slate-400">
+                    <p className="text-[11px] text-slate-600 dark:text-slate-400 font-medium">
                       Bonus Same-Type Attack (1.2x) saat elemen jurus Fast/Charged sama dengan tipe Pokémon Anda.
                     </p>
                   </div>
 
-                  <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1">
-                    <div className="flex items-center gap-1.5 font-bold text-cyan-400">
+                  <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1">
+                    <div className="flex items-center gap-1.5 font-bold text-cyan-700 dark:text-cyan-400">
                       <Shield className="w-3.5 h-3.5" /> 4. Durabilitas Def + HP
                     </div>
-                    <p className="text-[11px] text-slate-400">
+                    <p className="text-[11px] text-slate-600 dark:text-slate-400 font-medium">
                       Defense & Stamina menjaga Pokémon bertahan lebih lama agar dapat menembakkan Charged Move lebih banyak (TDO).
                     </p>
                   </div>
                 </div>
-                <div className="text-[11px] text-amber-200/90 font-medium bg-amber-500/10 p-2 rounded-lg border border-amber-500/20">
+                <div className="text-[11px] text-emerald-950 dark:text-emerald-200 font-medium bg-emerald-100/60 dark:bg-emerald-900/30 p-2.5 rounded-xl border border-emerald-300 dark:border-emerald-700">
                   💡 <span className="font-bold">Prioritas Koleksi:</span> Pokémon yang telah Anda simpan di menu <strong>Checklist Storage</strong> secara otomatis ditempatkan di paling atas agar Anda langsung tahu penyerang terbaik dari kantong Pokémon Anda sendiri!
                 </div>
               </div>
             )}
 
             {/* Filter & Sort Toolbar */}
-            <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div className="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs shadow-xs">
               {/* Quick Filter Tabs */}
               <div className="flex flex-wrap items-center gap-1.5">
-                <span className="text-slate-500 flex items-center gap-1 mr-1">
+                <span className="text-slate-600 dark:text-slate-400 flex items-center gap-1 mr-1 font-semibold">
                   <Filter className="w-3.5 h-3.5" /> Filter:
                 </span>
                 <button
                   type="button"
                   onClick={() => setFilterMode('all')}
-                  className={`px-2.5 py-1.5 rounded-lg font-medium transition-all ${
+                  className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer ${
                     filterMode === 'all'
-                      ? 'bg-indigo-600 text-white font-bold shadow'
-                      : 'bg-slate-800 text-slate-400 hover:text-slate-200'
+                      ? 'bg-emerald-600 text-white shadow-xs'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
                   }`}
                 >
                   Semua Terkuat ({selectedBoss.bestCounters.length})
@@ -551,10 +560,10 @@ export const RaidBossCounters: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setFilterMode('owned')}
-                  className={`px-2.5 py-1.5 rounded-lg font-medium transition-all flex items-center gap-1 ${
+                  className={`px-3 py-1.5 rounded-xl font-bold transition-all flex items-center gap-1 cursor-pointer ${
                     filterMode === 'owned'
-                      ? 'bg-amber-600 text-white font-bold shadow'
-                      : 'bg-slate-800 text-amber-400 hover:bg-slate-700'
+                      ? 'bg-amber-600 text-white shadow-xs'
+                      : 'bg-slate-100 dark:bg-slate-800 text-amber-800 dark:text-amber-300 hover:bg-slate-200'
                   }`}
                 >
                   <Star className="w-3.5 h-3.5 fill-current" />
@@ -563,10 +572,10 @@ export const RaidBossCounters: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setFilterMode('double_weak')}
-                  className={`px-2.5 py-1.5 rounded-lg font-medium transition-all flex items-center gap-1 ${
+                  className={`px-3 py-1.5 rounded-xl font-bold transition-all flex items-center gap-1 cursor-pointer ${
                     filterMode === 'double_weak'
-                      ? 'bg-rose-600 text-white font-bold shadow'
-                      : 'bg-slate-800 text-rose-300 hover:bg-slate-700'
+                      ? 'bg-rose-600 text-white shadow-xs'
+                      : 'bg-slate-100 dark:bg-slate-800 text-rose-800 dark:text-rose-300 hover:bg-slate-200'
                   }`}
                 >
                   <Flame className="w-3.5 h-3.5" />
@@ -576,13 +585,13 @@ export const RaidBossCounters: React.FC = () => {
 
               {/* Sort Order Selector */}
               <div className="flex items-center gap-2">
-                <span className="text-slate-500 flex items-center gap-1">
+                <span className="text-slate-600 dark:text-slate-400 flex items-center gap-1 font-semibold">
                   <ArrowUpDown className="w-3.5 h-3.5" /> Urutan:
                 </span>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as any)}
-                  className="bg-slate-950 text-slate-200 text-xs px-2.5 py-1.5 rounded-lg border border-slate-700 focus:outline-none focus:border-indigo-500 font-medium cursor-pointer"
+                  className="bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-emerald-500 font-semibold cursor-pointer"
                 >
                   <option value="power">⚡ Skor Kekuatan Raid (DPS + Durabilitas)</option>
                   <option value="attack">⚔️ Base Attack Tertinggi</option>
@@ -593,12 +602,12 @@ export const RaidBossCounters: React.FC = () => {
 
             {/* Counters Grid */}
             {processedCounters.length === 0 ? (
-              <div className="p-8 text-center rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2">
-                <AlertCircle className="w-8 h-8 text-amber-400 mx-auto" />
-                <p className="text-sm font-bold text-slate-200">
+              <div className="p-8 text-center rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
+                <AlertCircle className="w-8 h-8 text-amber-500 mx-auto" />
+                <p className="text-sm font-bold text-slate-800 dark:text-slate-200">
                   Tidak ada Pokémon counter yang cocok dengan filter aktif.
                 </p>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-slate-600 dark:text-slate-400">
                   {filterMode === 'owned'
                     ? 'Anda belum memiliki Pokémon dengan tipe counter ini di menu Storage Checklist. Coba ubah filter ke "Semua Terkuat".'
                     : 'Coba ubah opsi filter atau tipe di atas.'}
@@ -609,7 +618,7 @@ export const RaidBossCounters: React.FC = () => {
                     setFilterMode('all');
                     setTypeFilter('all');
                   }}
-                  className="mt-2 px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-500 transition-colors"
+                  className="mt-2 px-3 py-1.5 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition cursor-pointer"
                 >
                   Tampilkan Semua Counter
                 </button>
@@ -623,39 +632,39 @@ export const RaidBossCounters: React.FC = () => {
                   // Color gradient for tier ranks
                   const tierColor =
                     counter.rankTier === 'S+'
-                      ? 'bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-amber-500/20'
+                      ? 'bg-gradient-to-r from-amber-500 to-rose-500 text-white'
                       : counter.rankTier === 'S'
-                      ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black shadow-amber-500/20'
+                      ? 'bg-amber-500 text-slate-950 font-black'
                       : counter.rankTier === 'A+'
-                      ? 'bg-indigo-600 text-white'
-                      : 'bg-slate-700 text-slate-200';
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-slate-600 text-white';
 
                   return (
                     <div
                       key={`${counter.name}-${counter.dexNumber}-${idx}`}
-                      className={`relative p-4 rounded-2xl border transition-all duration-200 space-y-3 ${
+                      className={`relative p-4 rounded-2xl border transition-all duration-200 space-y-3 shadow-xs ${
                         isOwned
-                          ? 'bg-gradient-to-br from-amber-950/40 via-slate-900 to-slate-950 border-amber-500/70 shadow-lg shadow-amber-500/10 ring-1 ring-amber-500/30'
-                          : 'bg-slate-900/80 border-slate-800 hover:border-slate-700'
+                          ? 'bg-amber-50/70 dark:bg-amber-950/30 border-amber-400 dark:border-amber-700/80 ring-1 ring-amber-400/50'
+                          : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-emerald-500/40'
                       }`}
                     >
                       {/* Owned Highlight Ribbon */}
                       {isOwned && (
-                        <div className="flex items-center justify-between px-2.5 py-1 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-bold">
+                        <div className="flex items-center justify-between px-3 py-1 rounded-xl bg-amber-100 dark:bg-amber-900/40 border border-amber-300 dark:border-amber-700 text-amber-900 dark:text-amber-200 text-xs font-bold">
                           <span className="flex items-center gap-1.5">
-                            <Star className="w-3.5 h-3.5 fill-amber-400 shrink-0" />
+                            <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500 shrink-0" />
                             <span>DIMILIKI DI INVENTORY ({counter.ownedCount})</span>
                             {bestOwned?.isHundo && (
-                              <span className="text-[10px] px-1 bg-amber-500 text-slate-950 rounded font-black">
+                              <span className="text-[10px] px-1 bg-amber-500 text-white rounded font-black">
                                 100% IV
                               </span>
                             )}
                             {bestOwned?.isShiny && <span className="text-[10px]">✨</span>}
                           </span>
                           {bestOwned?.cp ? (
-                            <span className="font-mono text-amber-400">CP {bestOwned.cp}</span>
+                            <span className="font-mono text-amber-800 dark:text-amber-300 font-black">CP {bestOwned.cp}</span>
                           ) : (
-                            <span className="text-[10px] text-amber-400/80">Siap Tempur</span>
+                            <span className="text-[10px] text-amber-700 dark:text-amber-300 font-semibold">Siap Tempur</span>
                           )}
                         </div>
                       )}
@@ -663,7 +672,7 @@ export const RaidBossCounters: React.FC = () => {
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex items-center gap-3">
                           {/* Counter Sprite */}
-                          <div className="w-14 h-14 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center p-1 overflow-hidden shrink-0 relative">
+                          <div className="w-14 h-14 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-center p-1 overflow-hidden shrink-0 relative">
                             <img
                               src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${counter.dexNumber}.png`}
                               alt={counter.name}
@@ -683,10 +692,10 @@ export const RaidBossCounters: React.FC = () => {
 
                           <div>
                             <div className="flex items-center gap-2">
-                              <h4 className="text-base font-bold text-slate-100 tracking-tight">
+                              <h4 className="text-base font-bold text-slate-900 dark:text-slate-100 tracking-tight">
                                 {counter.name}
                               </h4>
-                              <span className="text-xs text-slate-500 font-mono">
+                              <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                                 #{counter.dexNumber}
                               </span>
                             </div>
@@ -712,48 +721,48 @@ export const RaidBossCounters: React.FC = () => {
                           )}
 
                           {counter.powerScore && (
-                            <span className="text-[10px] font-mono font-bold text-amber-300/90 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
+                            <span className="text-[10px] font-mono font-bold text-amber-800 dark:text-amber-300 bg-amber-100 dark:bg-amber-950 px-1.5 py-0.5 rounded border border-amber-300 dark:border-amber-800">
                               Skor: {counter.powerScore}
                             </span>
                           )}
                         </div>
                       </div>
 
-                      {/* Stat Breakdown Chips (Attack, Defense, Stamina, Max CP) */}
-                      <div className="grid grid-cols-4 gap-1.5 py-1.5 px-2 rounded-xl bg-slate-950/70 border border-slate-800/80 text-[11px] font-mono">
+                      {/* Stat Breakdown Chips */}
+                      <div className="grid grid-cols-4 gap-1.5 py-1.5 px-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-[11px] font-mono">
                         <div className="flex flex-col items-center">
-                          <span className="text-[9px] text-slate-500 flex items-center gap-0.5">
-                            <Swords className="w-2.5 h-2.5 text-rose-400" /> ATK
+                          <span className="text-[9px] text-slate-500 dark:text-slate-400 flex items-center gap-0.5">
+                            <Swords className="w-2.5 h-2.5 text-rose-500" /> ATK
                           </span>
-                          <span className="font-bold text-rose-300">{counter.attack || '-'}</span>
+                          <span className="font-bold text-rose-700 dark:text-rose-400">{counter.attack || '-'}</span>
                         </div>
                         <div className="flex flex-col items-center">
-                          <span className="text-[9px] text-slate-500 flex items-center gap-0.5">
-                            <Shield className="w-2.5 h-2.5 text-blue-400" /> DEF
+                          <span className="text-[9px] text-slate-500 dark:text-slate-400 flex items-center gap-0.5">
+                            <Shield className="w-2.5 h-2.5 text-blue-500" /> DEF
                           </span>
-                          <span className="font-bold text-blue-300">{counter.defense || '-'}</span>
+                          <span className="font-bold text-blue-700 dark:text-blue-400">{counter.defense || '-'}</span>
                         </div>
                         <div className="flex flex-col items-center">
-                          <span className="text-[9px] text-slate-500 flex items-center gap-0.5">
-                            <Heart className="w-2.5 h-2.5 text-emerald-400" /> STA
+                          <span className="text-[9px] text-slate-500 dark:text-slate-400 flex items-center gap-0.5">
+                            <Heart className="w-2.5 h-2.5 text-emerald-500" /> STA
                           </span>
-                          <span className="font-bold text-emerald-300">{counter.stamina || '-'}</span>
+                          <span className="font-bold text-emerald-700 dark:text-emerald-400">{counter.stamina || '-'}</span>
                         </div>
                         <div className="flex flex-col items-center">
-                          <span className="text-[9px] text-slate-500 flex items-center gap-0.5">
-                            <Zap className="w-2.5 h-2.5 text-amber-400" /> MAX CP
+                          <span className="text-[9px] text-slate-500 dark:text-slate-400 flex items-center gap-0.5">
+                            <Zap className="w-2.5 h-2.5 text-amber-500" /> MAX CP
                           </span>
-                          <span className="font-bold text-amber-300">{counter.maxCp ? `~${counter.maxCp}` : '-'}</span>
+                          <span className="font-bold text-amber-700 dark:text-amber-400">{counter.maxCp ? `~${counter.maxCp}` : '-'}</span>
                         </div>
                       </div>
 
                       {/* Recommended Moveset */}
-                      <div className="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-2 text-xs font-mono">
-                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                      <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-2 text-xs font-mono">
+                        <div className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                           Rekomendasi Jurus Terbaik:
                         </div>
-                        <div className="flex flex-wrap items-center justify-between gap-1.5 text-slate-300">
-                          <span className="text-slate-500 text-[11px]">Fast:</span>
+                        <div className="flex flex-wrap items-center justify-between gap-1.5 text-slate-800 dark:text-slate-200">
+                          <span className="text-slate-500 text-[11px] font-semibold">Fast:</span>
                           <MoveBadge
                             moveName={counter.fastMove}
                             type={counter.fastMoveType}
@@ -761,8 +770,8 @@ export const RaidBossCounters: React.FC = () => {
                             size="xs"
                           />
                         </div>
-                        <div className="flex flex-wrap items-center justify-between gap-1.5 text-slate-200">
-                          <span className="text-slate-500 text-[11px]">Charged:</span>
+                        <div className="flex flex-wrap items-center justify-between gap-1.5 text-slate-800 dark:text-slate-200">
+                          <span className="text-slate-500 text-[11px] font-semibold">Charged:</span>
                           <MoveBadge
                             moveName={counter.chargedMove}
                             type={counter.chargedMoveType}

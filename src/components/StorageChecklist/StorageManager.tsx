@@ -40,14 +40,14 @@ import {
 const STORAGE_KEY = 'pokego_master_storage_v1';
 
 const ROLE_OPTIONS: { role: RoleTag; label: string; icon: string; color: string }[] = [
-  { role: 'Raid Attacker', label: 'Raid Attacker', icon: '⚔️', color: 'bg-rose-950/80 text-rose-300 border-rose-700' },
-  { role: 'Gym Defender', label: 'Gym Defender', icon: '🛡️', color: 'bg-blue-950/80 text-blue-300 border-blue-700' },
-  { role: 'PvP Great League', label: 'PvP GL (1500)', icon: '🏆', color: 'bg-emerald-950/80 text-emerald-300 border-emerald-700' },
-  { role: 'PvP Ultra League', label: 'PvP UL (2500)', icon: '🥇', color: 'bg-amber-950/80 text-amber-300 border-amber-700' },
-  { role: 'PvP Master League', label: 'PvP ML (Open)', icon: '👑', color: 'bg-purple-950/80 text-purple-300 border-purple-700' },
-  { role: 'Mega Evolver', label: 'Mega Evolver', icon: '⚡', color: 'bg-cyan-950/80 text-cyan-300 border-cyan-700' },
-  { role: 'Rocket Buster', label: 'Rocket Buster', icon: '🚀', color: 'bg-violet-950/80 text-violet-300 border-violet-700' },
-  { role: 'Trophy', label: 'Trophy / Koleksi', icon: '✨', color: 'bg-yellow-950/80 text-yellow-300 border-yellow-700' },
+  { role: 'Raid Attacker', label: 'Raid Attacker', icon: '⚔️', color: 'bg-rose-50 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border-rose-200 dark:border-rose-800' },
+  { role: 'Gym Defender', label: 'Gym Defender', icon: '🛡️', color: 'bg-blue-50 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800' },
+  { role: 'PvP Great League', label: 'PvP GL (1500)', icon: '🏆', color: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800' },
+  { role: 'PvP Ultra League', label: 'PvP UL (2500)', icon: '🥇', color: 'bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800' },
+  { role: 'PvP Master League', label: 'PvP ML (Open)', icon: '👑', color: 'bg-purple-50 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 border-purple-200 dark:border-purple-800' },
+  { role: 'Mega Evolver', label: 'Mega Evolver', icon: '⚡', color: 'bg-cyan-50 dark:bg-cyan-950/60 text-cyan-800 dark:text-cyan-300 border-cyan-200 dark:border-cyan-800' },
+  { role: 'Rocket Buster', label: 'Rocket Buster', icon: '🚀', color: 'bg-violet-50 dark:bg-violet-950/60 text-violet-800 dark:text-violet-300 border-violet-200 dark:border-violet-800' },
+  { role: 'Trophy', label: 'Trophy / Koleksi', icon: '✨', color: 'bg-yellow-50 dark:bg-yellow-950/60 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800' },
 ];
 
 const INITIAL_SAMPLE_STORAGE: StoragePokemon[] = [
@@ -499,17 +499,16 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Top Banner & Stats Overview */}
-      <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-950 border border-indigo-500/40 shadow-2xl shadow-indigo-950/30 space-y-4">
+      <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white shadow-md space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 text-indigo-400 font-bold text-xs uppercase tracking-widest font-mono mb-1">
-              <span className="w-1.5 h-3.5 bg-indigo-500 rounded-sm"></span>
-              <PackageCheck className="w-3.5 h-3.5" /> Personal Collection Inventory
+            <div className="flex items-center gap-2 text-emerald-100 font-bold text-xs uppercase tracking-wider mb-1 font-mono">
+              <PackageCheck className="w-4 h-4 text-amber-300" /> Personal Collection Inventory
             </div>
-            <h2 className="text-xl sm:text-2xl font-black text-slate-100 tracking-tight font-mono">
+            <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white font-mono">
               My Storage Checklist
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1">
+            <p className="text-xs sm:text-sm text-emerald-50 mt-1 max-w-2xl font-medium">
               Checklist pencatatan Pokémon IV 100% (4★ Hundo), Shiny ✨, Lucky, dan Shadow dengan set jurus & peran raid/PvP.
             </p>
           </div>
@@ -518,7 +517,7 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={openAddModal}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-[0_0_15px_rgba(79,70,229,0.35)] transition cursor-pointer font-mono uppercase tracking-wider"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-black dark:bg-slate-800 dark:hover:bg-slate-700 text-white font-bold text-xs shadow-md transition cursor-pointer font-mono uppercase tracking-wider"
             >
               <Plus className="w-4 h-4 stroke-[3]" />
               <span>Tambah Pokémon</span>
@@ -530,34 +529,34 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                 setSyncStatusMsg('');
                 setIsSyncModalOpen(true);
               }}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-500/40 text-xs font-bold text-indigo-300 hover:text-white transition cursor-pointer font-mono"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/20 hover:bg-white/30 text-xs font-bold text-white transition cursor-pointer font-mono border border-white/30"
               title="Sinkronisasi ke HP Lain & Backup"
             >
-              <Smartphone className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Sync 2 Perangkat & Backup</span>
+              <Smartphone className="w-3.5 h-3.5 text-amber-300" />
+              <span>Sync 2 HP & Backup</span>
             </button>
 
             <button
               onClick={handleExportJson}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-950 hover:bg-slate-850 border border-indigo-500/30 text-xs font-semibold text-slate-300 hover:text-indigo-300 transition cursor-pointer font-mono"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-black/20 hover:bg-black/30 border border-white/20 text-xs font-semibold text-white transition cursor-pointer font-mono"
               title="Ekspor Data ke File JSON"
             >
-              <Download className="w-3.5 h-3.5 text-indigo-400" />
+              <Download className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Ekspor JSON</span>
             </button>
 
             <label
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-950 hover:bg-slate-850 border border-indigo-500/30 text-xs font-semibold text-slate-300 hover:text-indigo-300 transition cursor-pointer font-mono"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-black/20 hover:bg-black/30 border border-white/20 text-xs font-semibold text-white transition cursor-pointer font-mono"
               title="Impor Data dari File JSON"
             >
-              <Upload className="w-3.5 h-3.5 text-cyan-400" />
+              <Upload className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Impor File</span>
               <input type="file" accept=".json" onChange={handleImportJsonFile} className="hidden" />
             </label>
 
             <button
               onClick={handleResetSample}
-              className="p-2 rounded-xl bg-slate-950 hover:bg-slate-850 border border-slate-800 text-slate-400 hover:text-slate-200 transition cursor-pointer"
+              className="p-2 rounded-xl bg-black/20 hover:bg-black/30 border border-white/20 text-white transition cursor-pointer"
               title="Muat Ulang Contoh Data"
             >
               <RefreshCw className="w-3.5 h-3.5" />
@@ -566,43 +565,43 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
         </div>
 
         {/* Mini Stats Bar */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 pt-3 border-t border-indigo-500/20">
-          <div className="p-3 bg-slate-950/70 rounded-xl border border-indigo-500/20 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-indigo-500/10 text-indigo-400 font-bold text-base">📦</div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 pt-3 border-t border-emerald-500/40">
+          <div className="p-3 bg-white/10 backdrop-blur-xs rounded-xl border border-white/20 flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-white/20 text-white font-bold text-base">📦</div>
             <div>
-              <div className="text-[10px] text-slate-400 font-medium font-mono uppercase tracking-wider">Total Koleksi</div>
-              <div className="text-lg font-black text-slate-100 font-mono">{items.length}</div>
+              <div className="text-[10px] text-emerald-100 font-medium font-mono uppercase tracking-wider">Total Koleksi</div>
+              <div className="text-lg font-black text-white font-mono">{items.length}</div>
             </div>
           </div>
 
-          <div className="p-3 bg-slate-950/70 rounded-xl border border-amber-500/30 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-amber-500/10 text-amber-400 font-bold text-base">💯</div>
+          <div className="p-3 bg-white/10 backdrop-blur-xs rounded-xl border border-white/20 flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-amber-400/20 text-amber-300 font-bold text-base">💯</div>
             <div>
-              <div className="text-[10px] text-amber-300/80 font-medium font-mono uppercase tracking-wider">Hundo (IV 100%)</div>
-              <div className="text-lg font-black text-amber-400 font-mono">{totalHundos}</div>
+              <div className="text-[10px] text-amber-200 font-medium font-mono uppercase tracking-wider">Hundo (IV 100%)</div>
+              <div className="text-lg font-black text-amber-300 font-mono">{totalHundos}</div>
             </div>
           </div>
 
-          <div className="p-3 bg-slate-950/70 rounded-xl border border-cyan-500/30 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400 font-bold text-base">✨</div>
+          <div className="p-3 bg-white/10 backdrop-blur-xs rounded-xl border border-white/20 flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-cyan-400/20 text-cyan-200 font-bold text-base">✨</div>
             <div>
-              <div className="text-[10px] text-cyan-300/80 font-medium font-mono uppercase tracking-wider">Shiny Pokémon</div>
-              <div className="text-lg font-black text-cyan-400 font-mono">{totalShinies}</div>
+              <div className="text-[10px] text-cyan-100 font-medium font-mono uppercase tracking-wider">Shiny Pokémon</div>
+              <div className="text-lg font-black text-cyan-200 font-mono">{totalShinies}</div>
             </div>
           </div>
 
-          <div className="p-3 bg-slate-950/70 rounded-xl border border-rose-500/30 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-rose-500/10 text-rose-400 font-bold text-base">👑</div>
+          <div className="p-3 bg-white/10 backdrop-blur-xs rounded-xl border border-white/20 flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-rose-400/20 text-rose-200 font-bold text-base">👑</div>
             <div>
-              <div className="text-[10px] text-rose-300/80 font-medium font-mono uppercase tracking-wider">Shundo (Shiny 100%)</div>
-              <div className="text-lg font-black text-rose-400 font-mono">{totalShundos}</div>
+              <div className="text-[10px] text-rose-100 font-medium font-mono uppercase tracking-wider">Shundo (Shiny 100%)</div>
+              <div className="text-lg font-black text-rose-200 font-mono">{totalShundos}</div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="p-4 rounded-2xl bg-slate-900/60 backdrop-blur-md border border-slate-800 space-y-3">
+      <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
         <div className="flex flex-col sm:flex-row gap-3">
           {/* Search Input */}
           <div className="relative flex-1">
@@ -612,12 +611,12 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Cari nama Pokémon, No. Dex (#1 s/d #1028), move, atau catatan..."
-              className="w-full pl-10 pr-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-cyan-500 transition font-mono"
+              className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition font-mono"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 text-xs"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -629,7 +628,7 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300 focus:outline-none focus:border-cyan-500 cursor-pointer font-mono"
+              className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer font-mono font-semibold"
             >
               <option value="date">Urutkan: Baru Ditambahkan</option>
               <option value="cp">Urutkan: CP Tertinggi</option>
@@ -638,7 +637,7 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
             </select>
             <button
               onClick={() => setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'))}
-              className="p-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-400 hover:text-slate-200 transition cursor-pointer"
+              className="p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 transition cursor-pointer"
               title="Balik Urutan"
             >
               <ArrowUpDown className="w-4 h-4" />
@@ -650,10 +649,10 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
         <div className="flex flex-wrap items-center gap-1.5 pt-1">
           <button
             onClick={() => setFilterCategory('all')}
-            className={`px-3 py-1 rounded-lg text-xs font-semibold border transition cursor-pointer font-mono ${
+            className={`px-3 py-1 rounded-xl text-xs font-bold border transition cursor-pointer font-mono ${
               filterCategory === 'all'
-                ? 'bg-cyan-500 text-slate-950 border-cyan-400 font-bold'
-                : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200'
+                ? 'bg-emerald-600 text-white border-emerald-600'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-200'
             }`}
           >
             Semua ({items.length})
@@ -661,10 +660,10 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
 
           <button
             onClick={() => setFilterCategory('hundo')}
-            className={`px-3 py-1 rounded-lg text-xs font-semibold border transition cursor-pointer font-mono ${
+            className={`px-3 py-1 rounded-xl text-xs font-bold border transition cursor-pointer font-mono ${
               filterCategory === 'hundo'
-                ? 'bg-amber-500 text-slate-950 border-amber-400 font-bold'
-                : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-amber-300'
+                ? 'bg-amber-500 text-slate-950 border-amber-500'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:text-amber-600'
             }`}
           >
             💯 IV 100% (4★)
@@ -672,10 +671,10 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
 
           <button
             onClick={() => setFilterCategory('shiny')}
-            className={`px-3 py-1 rounded-lg text-xs font-semibold border transition cursor-pointer font-mono ${
+            className={`px-3 py-1 rounded-xl text-xs font-bold border transition cursor-pointer font-mono ${
               filterCategory === 'shiny'
-                ? 'bg-cyan-500 text-slate-950 border-cyan-400 font-bold'
-                : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-cyan-300'
+                ? 'bg-cyan-600 text-white border-cyan-600'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:text-cyan-600'
             }`}
           >
             ✨ Shiny
@@ -683,10 +682,10 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
 
           <button
             onClick={() => setFilterCategory('shundo')}
-            className={`px-3 py-1 rounded-lg text-xs font-semibold border transition cursor-pointer font-mono ${
+            className={`px-3 py-1 rounded-xl text-xs font-bold border transition cursor-pointer font-mono ${
               filterCategory === 'shundo'
-                ? 'bg-rose-600 text-white border-rose-500 font-bold animate-pulse'
-                : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-rose-400'
+                ? 'bg-rose-600 text-white border-rose-500 animate-pulse'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:text-rose-600'
             }`}
           >
             👑 Shundo (Shiny + 100%)
@@ -694,11 +693,11 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
 
           {/* Role Filter Dropdown */}
           <div className="ml-auto flex items-center gap-1.5">
-            <span className="text-[11px] text-slate-500 hidden sm:inline font-mono">Role:</span>
+            <span className="text-[11px] text-slate-500 dark:text-slate-400 hidden sm:inline font-mono font-medium">Role:</span>
             <select
               value={selectedRoleFilter}
               onChange={(e) => setSelectedRoleFilter(e.target.value)}
-              className="px-2.5 py-1 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-300 focus:outline-none cursor-pointer font-mono"
+              className="px-2.5 py-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs text-slate-800 dark:text-slate-200 focus:outline-none cursor-pointer font-mono font-semibold"
             >
               <option value="all">Semua Peran</option>
               {ROLE_OPTIONS.map((r) => (
@@ -713,10 +712,10 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
 
       {/* Pokemon Grid */}
       {filteredItems.length === 0 ? (
-        <div className="p-12 text-center rounded-2xl bg-slate-900/40 border border-slate-800/80 space-y-3">
+        <div className="p-12 text-center rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
           <div className="text-4xl">🔍</div>
-          <h3 className="text-base font-bold text-slate-200">Tidak ada Pokémon yang cocok</h3>
-          <p className="text-xs text-slate-400 max-w-sm mx-auto">
+          <h3 className="text-base font-bold text-slate-800 dark:text-slate-200">Tidak ada Pokémon yang cocok</h3>
+          <p className="text-xs text-slate-600 dark:text-slate-400 max-w-sm mx-auto font-medium">
             Coba sesuaikan kata kunci pencarian (nama, nomor dex 1-1028) atau bersihkan filter yang aktif.
           </p>
           <button
@@ -725,7 +724,7 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
               setFilterCategory('all');
               setSelectedRoleFilter('all');
             }}
-            className="px-4 py-2 rounded-xl bg-slate-800 text-xs font-bold text-slate-200 hover:bg-slate-700 transition cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-200 transition cursor-pointer"
           >
             Reset Filter
           </button>
@@ -735,20 +734,20 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
           {filteredItems.map((item) => (
             <div
               key={item.id}
-              className="group relative p-4 rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 hover:border-slate-700 transition-all duration-200 shadow-md space-y-3"
+              className="group relative p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 dark:hover:border-emerald-500/50 transition-all duration-200 shadow-xs space-y-3"
             >
               {/* Card Header: Sprite + Name + Tags */}
               <div className="flex items-start justify-between gap-2">
                 <div className="flex items-center gap-3">
                   {/* Sprite Box */}
-                  <div className="relative w-16 h-16 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-center p-1 overflow-hidden group-hover:scale-105 transition-transform">
+                  <div className="relative w-16 h-16 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-center p-1 overflow-hidden group-hover:scale-105 transition-transform">
                     {item.isShiny && (
-                      <div className="absolute top-1 left-1 text-cyan-400 animate-bounce">
+                      <div className="absolute top-1 left-1 text-cyan-600 dark:text-cyan-400">
                         <Sparkles className="w-3.5 h-3.5" />
                       </div>
                     )}
                     {item.isHundo && (
-                      <div className="absolute bottom-1 right-1 px-1 rounded bg-amber-500 text-[8px] font-black text-slate-950">
+                      <div className="absolute bottom-1 right-1 px-1 rounded bg-amber-500 text-[8px] font-black text-white">
                         100%
                       </div>
                     )}
@@ -759,28 +758,28 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                       }
                       alt={item.name}
                       referrerPolicy="no-referrer"
-                      className="w-full h-full object-contain drop-shadow-md"
+                      className="w-full h-full object-contain drop-shadow-xs"
                       loading="lazy"
                     />
                   </div>
 
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <h4 className="text-base font-black text-slate-100 tracking-tight font-mono">
+                      <h4 className="text-base font-black text-slate-900 dark:text-slate-100 tracking-tight font-mono">
                         {item.name}
                       </h4>
                       {item.isShiny && (
-                        <span className="text-cyan-400 text-xs" title="Shiny">
+                        <span className="text-cyan-600 dark:text-cyan-400 text-xs" title="Shiny">
                           ✨
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-1.5 text-xs text-slate-400 font-mono">
+                    <div className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 font-mono font-medium">
                       <span>#{String(item.dexNumber).padStart(3, '0')}</span>
                       {item.cp && (
                         <>
-                          <span className="text-slate-600">•</span>
-                          <span className="text-amber-400 font-bold">CP {item.cp}</span>
+                          <span className="text-slate-400">•</span>
+                          <span className="text-amber-700 dark:text-amber-400 font-bold">CP {item.cp}</span>
                         </>
                       )}
                     </div>
@@ -791,14 +790,14 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                 <div className="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
                   <button
                     onClick={() => openEditModal(item)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-cyan-300 hover:bg-slate-800 transition cursor-pointer"
+                    className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-emerald-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
                     title="Edit data Pokémon & Moveset"
                   >
                     <Edit2 className="w-3.5 h-3.5" />
                   </button>
                   <button
                     onClick={() => handleDeleteItem(item.id)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition cursor-pointer"
+                    className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
                     title="Hapus dari checklist"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -813,25 +812,25 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                 ))}
 
                 {item.isHundo && (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 border border-amber-300 dark:border-amber-700">
                     💯 IV 100 (4★)
                   </span>
                 )}
 
                 {item.isShiny && (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-100 dark:bg-cyan-950/60 text-cyan-900 dark:text-cyan-300 border border-cyan-300 dark:border-cyan-700">
                     ✨ Shiny
                   </span>
                 )}
 
                 {item.isLucky && (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-yellow-500/20 text-yellow-300 border border-yellow-500/40">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-yellow-100 dark:bg-yellow-950/60 text-yellow-900 dark:text-yellow-300 border border-yellow-300 dark:border-yellow-700">
                     🍀 Lucky
                   </span>
                 )}
 
                 {item.isShadow && (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-purple-900/30 text-purple-300 border border-purple-700/50">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-purple-100 dark:bg-purple-950/60 text-purple-900 dark:text-purple-300 border border-purple-300 dark:border-purple-700">
                     🔥 Shadow
                   </span>
                 )}
@@ -839,14 +838,14 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
 
               {/* Roles Tags */}
               {item.roles && item.roles.length > 0 && (
-                <div className="flex flex-wrap gap-1 pt-1 border-t border-slate-800/60">
+                <div className="flex flex-wrap gap-1 pt-1 border-t border-slate-100 dark:border-slate-800">
                   {item.roles.map((r) => {
                     const opt = ROLE_OPTIONS.find((ro) => ro.role === r);
                     return (
                       <span
                         key={r}
-                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium border ${
-                          opt?.color || 'bg-slate-800 text-slate-300 border-slate-700'
+                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold border ${
+                          opt?.color || 'bg-slate-100 text-slate-700 border-slate-300'
                         }`}
                       >
                         <span>{opt?.icon}</span>
@@ -857,18 +856,18 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                 </div>
               )}
 
-              {/* Moveset Info with Element Type Logos & Badges */}
+              {/* Moveset Info */}
               {(item.fastMove || (item.chargedMoves && item.chargedMoves.length > 0)) && (
-                <div className="p-2.5 rounded-xl bg-slate-950/90 border border-slate-800/90 text-[11px] space-y-1.5 font-mono">
+                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-[11px] space-y-1.5 font-mono">
                   {item.fastMove && (
                     <div className="flex flex-wrap items-center gap-1.5">
-                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Fast:</span>
+                      <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Fast:</span>
                       <MoveBadge moveName={item.fastMove} category="Fast" size="xs" />
                     </div>
                   )}
                   {item.chargedMoves && item.chargedMoves.length > 0 && (
                     <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Charged:</span>
+                      <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Charged:</span>
                       {item.chargedMoves.map((m, idx) => (
                         <MoveBadge key={`${m}-${idx}`} moveName={m} category="Charged" size="xs" />
                       ))}
@@ -879,7 +878,7 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
 
               {/* Notes */}
               {item.notes && (
-                <p className="text-[11px] text-slate-400 italic bg-slate-950/30 p-1.5 rounded line-clamp-2">
+                <p className="text-[11px] text-slate-600 dark:text-slate-400 italic bg-slate-50 dark:bg-slate-800/40 p-1.5 rounded line-clamp-2">
                   "{item.notes}"
                 </p>
               )}
@@ -890,16 +889,16 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
 
       {/* Sync 2 Perangkat & Backup Modal */}
       {isSyncModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-150">
-          <div className="relative w-full max-w-2xl bg-slate-900 border border-indigo-500/40 rounded-2xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/95">
-              <h3 className="text-base font-bold text-slate-100 flex items-center gap-2 font-mono">
-                <Smartphone className="w-5 h-5 text-cyan-400" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="relative w-full max-w-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
+              <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2 font-mono">
+                <Smartphone className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                 Sinkronisasi Antar 2 Perangkat & Backup Data
               </h3>
               <button
                 onClick={() => setIsSyncModalOpen(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800 cursor-pointer"
+                className="p-1 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -907,17 +906,17 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
 
             <div className="p-6 space-y-5 overflow-y-auto flex-1 text-xs sm:text-sm">
               {/* FAQ & Transparency Box */}
-              <div className="p-4 rounded-xl bg-indigo-950/40 border border-indigo-500/30 space-y-2">
-                <div className="flex items-center gap-2 font-bold text-indigo-300 text-xs font-mono">
-                  <HelpCircle className="w-4 h-4 text-indigo-400" />
+              <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 space-y-2">
+                <div className="flex items-center gap-2 font-bold text-emerald-900 dark:text-emerald-300 text-xs font-mono">
+                  <HelpCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   Bagaimana Data Disimpan & Apakah Akan Hilang?
                 </div>
-                <div className="text-xs text-slate-300 space-y-1.5 leading-relaxed">
+                <div className="text-xs text-slate-700 dark:text-slate-300 space-y-1.5 leading-relaxed font-medium">
                   <p>
                     <strong>A. Hanya di HP ini?</strong> Ya, data tersimpan secara lokal dan privat di memori peramban (<strong>LocalStorage</strong>) HP Anda tanpa pihak ketiga.
                   </p>
                   <p>
-                    <strong>B. Jika aplikasi terupdate, apakah list hilang?</strong> <span className="text-emerald-400 font-bold">TIDAK AKAN HILANG.</span> Pembaruan sistem atau web tidak menghapus data Anda. Data hanya hilang jika Anda sengaja melakukan <em>Clear Cache / Hapus Data Situs</em> di browser.
+                    <strong>B. Jika aplikasi terupdate, apakah list hilang?</strong> <span className="text-emerald-700 dark:text-emerald-400 font-bold">TIDAK AKAN HILANG.</span> Pembaruan sistem atau web tidak menghapus data Anda. Data hanya hilang jika Anda sengaja melakukan <em>Clear Cache / Hapus Data Situs</em> di browser.
                   </p>
                   <p>
                     <strong>C. Cara Sync ke HP kedua:</strong> Cukup klik <strong>"Salin Kode Sync"</strong> di bawah, lalu buka aplikasi ini di HP kedua dan <strong>"Tempel & Terapkan"</strong>.
@@ -927,26 +926,26 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
 
               {/* Status Message */}
               {syncStatusMsg && (
-                <div className="p-3 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-mono flex items-center gap-2 animate-in fade-in">
-                  <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                <div className="p-3 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-600 text-emerald-900 dark:text-emerald-300 text-xs font-mono flex items-center gap-2 animate-in fade-in">
+                  <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                   <span>{syncStatusMsg}</span>
                 </div>
               )}
 
               {/* Step 1: Export / Copy */}
-              <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-3">
                 <div className="flex items-center justify-between">
-                  <div className="font-bold text-slate-200 flex items-center gap-2">
-                    <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xs font-black">1</span>
+                  <div className="font-bold text-slate-900 dark:text-slate-200 flex items-center gap-2">
+                    <span className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-400 flex items-center justify-center text-xs font-black">1</span>
                     Salin Data Dari HP Ini (Untuk Dipindah):
                   </div>
-                  <span className="text-xs text-slate-400 font-mono">{items.length} Pokémon</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400 font-mono font-semibold">{items.length} Pokémon</span>
                 </div>
 
                 <div className="flex flex-wrap gap-2">
                   <button
                     onClick={handleCopySyncCode}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-xs transition cursor-pointer font-mono"
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition cursor-pointer font-mono"
                   >
                     <Copy className="w-4 h-4" />
                     <span>{copiedSync ? '✅ Tersalin ke Clipboard!' : 'Salin Kode Sync (Clipboard)'}</span>
@@ -954,18 +953,18 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
 
                   <button
                     onClick={handleExportJson}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition cursor-pointer font-mono"
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs transition cursor-pointer font-mono"
                   >
-                    <Download className="w-4 h-4 text-indigo-400" />
+                    <Download className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                     <span>Download File .JSON</span>
                   </button>
                 </div>
               </div>
 
               {/* Step 2: Import / Paste on 2nd Device */}
-              <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
-                <div className="font-bold text-slate-200 flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs font-black">2</span>
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-3">
+                <div className="font-bold text-slate-900 dark:text-slate-200 flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-400 flex items-center justify-center text-xs font-black">2</span>
                   Tempelkan Data di HP Kedua (Impor):
                 </div>
 
@@ -974,20 +973,20 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                   onChange={(e) => setSyncJsonInput(e.target.value)}
                   placeholder='Tempelkan kode JSON data Pokémon di sini (contoh: [{"name": "Rayquaza", ...}])'
                   rows={4}
-                  className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-slate-100 font-mono text-xs focus:outline-none focus:border-cyan-400"
+                  className="w-full px-3.5 py-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 font-mono text-xs focus:outline-none focus:border-emerald-500"
                 />
 
                 <div className="flex flex-wrap gap-2">
                   <button
                     onClick={() => handleImportPastedCode('replace')}
-                    className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition cursor-pointer font-mono"
+                    className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition cursor-pointer font-mono"
                   >
                     Terapkan (Timpa Semua Data)
                   </button>
 
                   <button
                     onClick={() => handleImportPastedCode('merge')}
-                    className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition cursor-pointer font-mono"
+                    className="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs transition cursor-pointer font-mono"
                   >
                     Gabungkan (Merge dengan Data Saat Ini)
                   </button>
@@ -995,10 +994,10 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
               </div>
             </div>
 
-            <div className="px-6 py-3 border-t border-slate-800 bg-slate-900/95 flex justify-end">
+            <div className="px-6 py-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex justify-end">
               <button
                 onClick={() => setIsSyncModalOpen(false)}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs transition cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold text-xs transition cursor-pointer"
               >
                 Tutup
               </button>
@@ -1009,17 +1008,17 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
 
       {/* Add / Edit Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-150">
-          <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="relative w-full max-w-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
             {/* Modal Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/95">
-              <h3 className="text-base font-bold text-slate-100 flex items-center gap-2 font-mono">
-                <PackageCheck className="w-5 h-5 text-cyan-400" />
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
+              <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2 font-mono">
+                <PackageCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                 {editingItem ? 'Edit Data Pokémon & Moveset' : 'Tambah Pokémon ke Checklist'}
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800 cursor-pointer"
+                className="p-1 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1029,7 +1028,7 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
             <form onSubmit={handleSavePokemon} className="p-6 space-y-4 overflow-y-auto flex-1 text-xs sm:text-sm">
               {/* Quick Search Autocomplete */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-300 uppercase tracking-wider font-mono">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider font-mono">
                   Cari Nama Pokémon / No. Pokédex (#1 s/d #1028):
                 </label>
                 <input
@@ -1045,19 +1044,19 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                     }
                   }}
                   placeholder="Ketik nama atau No. Pokédex (contoh: Rayquaza, Lucario, #1025 Pecharunt...)"
-                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-cyan-500 font-mono"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-mono"
                   required
                 />
 
                 {/* Suggestions List */}
                 <div className="flex flex-wrap gap-1.5 pt-1">
-                  <span className="text-[10px] text-slate-500 self-center font-mono">Saran Cepat:</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 self-center font-mono font-medium">Saran Cepat:</span>
                   {autocompleteSuggestions.map((p) => (
                     <button
                       key={p.dex}
                       type="button"
                       onClick={() => handleSelectCatalogPokemon(p)}
-                      className="px-2 py-1 rounded bg-slate-950 hover:bg-slate-800 border border-slate-800 text-[11px] text-slate-300 hover:text-cyan-300 transition cursor-pointer font-mono flex items-center gap-1"
+                      className="px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-[11px] text-slate-700 dark:text-slate-300 hover:text-emerald-700 transition cursor-pointer font-mono flex items-center gap-1 font-semibold"
                     >
                       <span>#{p.dex}</span>
                       <span>{p.name}</span>
@@ -1069,17 +1068,17 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
               {/* Row: CP & Dex */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-300 font-mono">Combat Power (CP):</label>
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono">Combat Power (CP):</label>
                   <input
                     type="number"
                     value={formCp}
                     onChange={(e) => setFormCp(e.target.value)}
                     placeholder="Contoh: 4178"
-                    className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-cyan-500 font-mono"
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-mono"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-300 font-mono">No. Pokédex (1 - 1028):</label>
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono">No. Pokédex (1 - 1028):</label>
                   <input
                     type="number"
                     min={1}
@@ -1094,22 +1093,22 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                         setFormTypes(matched.types);
                       }
                     }}
-                    className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-cyan-500 font-mono"
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-mono"
                   />
                 </div>
               </div>
 
               {/* Status Checkboxes: IV 100, Shiny, Lucky, Shadow */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-300 uppercase tracking-wider font-mono">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider font-mono">
                   Status & Atribut Spesial:
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono">
                   <label
                     className={`flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer transition ${
                       formIsHundo
-                        ? 'bg-amber-950/60 border-amber-500 text-amber-300 font-bold'
-                        : 'bg-slate-950 border-slate-800 text-slate-400'
+                        ? 'bg-amber-50 dark:bg-amber-950/60 border-amber-400 text-amber-900 dark:text-amber-300 font-bold'
+                        : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400'
                     }`}
                   >
                     <input
@@ -1124,8 +1123,8 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                   <label
                     className={`flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer transition ${
                       formIsShiny
-                        ? 'bg-cyan-950/60 border-cyan-500 text-cyan-300 font-bold'
-                        : 'bg-slate-950 border-slate-800 text-slate-400'
+                        ? 'bg-cyan-50 dark:bg-cyan-950/60 border-cyan-400 text-cyan-900 dark:text-cyan-300 font-bold'
+                        : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400'
                     }`}
                   >
                     <input
@@ -1140,8 +1139,8 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                   <label
                     className={`flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer transition ${
                       formIsLucky
-                        ? 'bg-yellow-950/60 border-yellow-500 text-yellow-300 font-bold'
-                        : 'bg-slate-950 border-slate-800 text-slate-400'
+                        ? 'bg-yellow-50 dark:bg-yellow-950/60 border-yellow-400 text-yellow-900 dark:text-yellow-300 font-bold'
+                        : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400'
                     }`}
                   >
                     <input
@@ -1156,8 +1155,8 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                   <label
                     className={`flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer transition ${
                       formIsShadow
-                        ? 'bg-purple-950/60 border-purple-500 text-purple-300 font-bold'
-                        : 'bg-slate-950 border-slate-800 text-slate-400'
+                        ? 'bg-purple-50 dark:bg-purple-950/60 border-purple-400 text-purple-900 dark:text-purple-300 font-bold'
+                        : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400'
                     }`}
                   >
                     <input
@@ -1172,13 +1171,13 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
               </div>
 
               {/* Quick Meta Moveset Recommendation Auto-fill Bar */}
-              <div className="p-3.5 rounded-xl bg-gradient-to-r from-slate-950 to-indigo-950/60 border border-indigo-500/30 space-y-2.5">
+              <div className="p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <div className="text-xs font-bold text-indigo-300 flex items-center gap-1.5 font-mono">
-                    <Zap className="w-3.5 h-3.5 text-amber-400" />
+                  <div className="text-xs font-bold text-emerald-900 dark:text-emerald-300 flex items-center gap-1.5 font-mono">
+                    <Zap className="w-3.5 h-3.5 text-amber-500" />
                     Saran & Rekomendasi Jurus ({formName}):
                   </div>
-                  <span className="text-[10px] text-slate-400 font-mono">1-Klik Terapkan</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono font-medium">1-Klik Terapkan</span>
                 </div>
 
                 <div className="flex flex-wrap gap-2">
@@ -1186,9 +1185,9 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                     <button
                       type="button"
                       onClick={handleApplyRaidMoveset}
-                      className="px-3 py-1.5 rounded-lg bg-rose-950/80 hover:bg-rose-900 border border-rose-700/80 text-rose-300 text-xs font-mono font-bold flex items-center gap-1.5 transition cursor-pointer"
+                      className="px-3 py-1.5 rounded-lg bg-rose-100 hover:bg-rose-200 dark:bg-rose-950/80 dark:hover:bg-rose-900 border border-rose-300 dark:border-rose-700 text-rose-900 dark:text-rose-300 text-xs font-mono font-bold flex items-center gap-1.5 transition cursor-pointer"
                     >
-                      <Swords className="w-3.5 h-3.5 text-rose-400" />
+                      <Swords className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
                       <span>Raid Set: {moveSuggestions.recommendedRaid.fast} + {moveSuggestions.recommendedRaid.charged.join('/')}</span>
                     </button>
                   )}
@@ -1197,9 +1196,9 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                     <button
                       type="button"
                       onClick={handleApplyPvpMoveset}
-                      className="px-3 py-1.5 rounded-lg bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-700/80 text-emerald-300 text-xs font-mono font-bold flex items-center gap-1.5 transition cursor-pointer"
+                      className="px-3 py-1.5 rounded-lg bg-emerald-100 hover:bg-emerald-200 dark:bg-emerald-950/80 dark:hover:bg-emerald-900 border border-emerald-300 dark:border-emerald-700 text-emerald-900 dark:text-emerald-300 text-xs font-mono font-bold flex items-center gap-1.5 transition cursor-pointer"
                     >
-                      <Shield className="w-3.5 h-3.5 text-emerald-400" />
+                      <Shield className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                       <span>PvP Set: {moveSuggestions.recommendedPvp.fast} + {moveSuggestions.recommendedPvp.charged.join('/')}</span>
                     </button>
                   )}
@@ -1207,21 +1206,21 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
               </div>
 
               {/* Fast Move with 1-Click Type Badges + Categorized Dropdown */}
-              <div className="space-y-2 p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+              <div className="space-y-2 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-cyan-300 flex items-center gap-1.5 font-mono">
+                  <label className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5 font-mono">
                     <span>⚡ Fast Move:</span>
                     {formFastMove && (
                       <MoveBadge moveName={formFastMove} category="Fast" size="xs" />
                     )}
                   </label>
-                  <span className="text-[10px] text-slate-400 font-mono">Pilih chip, dropdown, atau ketik</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">Pilih chip, dropdown, atau ketik</span>
                 </div>
 
-                {/* 1-Click Fast Move Chips with Elemental Type Logos */}
+                {/* 1-Click Fast Move Chips */}
                 {moveSuggestions.fastMoves.length > 0 && (
                   <div className="space-y-1">
-                    <span className="text-[10px] text-slate-400 font-mono block">Jurus Cepat Populer:</span>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono font-semibold block">Jurus Cepat Populer:</span>
                     <div className="flex flex-wrap gap-1.5">
                       {moveSuggestions.fastMoves.map((m) => (
                         <MoveBadge
@@ -1241,7 +1240,7 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                   <select
                     value={formFastMove}
                     onChange={(e) => setFormFastMove(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 text-xs focus:outline-none focus:border-cyan-500 font-mono cursor-pointer"
+                    className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:border-emerald-500 font-mono cursor-pointer"
                   >
                     <option value="">-- Pilih Fast Move ({formName || 'Pokémon'}) --</option>
                     <optgroup label={`⭐ Rekomendasi Jurus ${formName || 'Pokémon'}`}>
@@ -1274,24 +1273,24 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                     value={formFastMove}
                     onChange={(e) => setFormFastMove(e.target.value)}
                     placeholder="Atau ketik jurus kustom..."
-                    className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 text-xs focus:outline-none focus:border-cyan-500 font-mono"
+                    className="w-full px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:border-emerald-500 font-mono"
                   />
                 </div>
               </div>
 
               {/* Charged Moves with 1-Click Type Badges + Categorized Dropdowns */}
-              <div className="space-y-2 p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+              <div className="space-y-2 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-amber-300 flex items-center gap-1.5 font-mono">
+                  <label className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5 font-mono">
                     <span>💥 Charged Moves (Jurus Charge):</span>
                   </label>
-                  <span className="text-[10px] text-slate-400 font-mono">Pilih chip rekomendasi atau dropdown</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">Pilih chip rekomendasi atau dropdown</span>
                 </div>
 
-                {/* 1-Click Charged Move Chips with Elemental Type Logos */}
+                {/* 1-Click Charged Move Chips */}
                 {moveSuggestions.chargedMoves.length > 0 && (
                   <div className="space-y-1">
-                    <span className="text-[10px] text-slate-400 font-mono block">Jurus Charge Populer ({formName}):</span>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono font-semibold block">Jurus Charge Populer ({formName}):</span>
                     <div className="flex flex-wrap gap-1.5">
                       {moveSuggestions.chargedMoves.map((m) => (
                         <MoveBadge
@@ -1304,11 +1303,10 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                             if (!formChargedMove1) {
                               setFormChargedMove1(m);
                             } else if (formChargedMove1 === m) {
-                              // toggle off or do nothing
+                              // toggle off
                             } else if (!formChargedMove2) {
                               setFormChargedMove2(m);
                             } else {
-                              // Replace move 1 or 2
                               setFormChargedMove1(m);
                             }
                           }}
@@ -1321,13 +1319,13 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <label className="text-xs font-bold text-amber-300 font-mono">Charged Move #1:</label>
+                      <label className="text-xs font-bold text-slate-800 dark:text-slate-200 font-mono">Charged Move #1:</label>
                       {formChargedMove1 && <MoveBadge moveName={formChargedMove1} category="Charged" size="xs" />}
                     </div>
                     <select
                       value={formChargedMove1}
                       onChange={(e) => setFormChargedMove1(e.target.value)}
-                      className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 text-xs focus:outline-none focus:border-amber-500 font-mono cursor-pointer"
+                      className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:border-emerald-500 font-mono cursor-pointer"
                     >
                       <option value="">-- Pilih Charged Move 1 --</option>
                       <optgroup label={`⭐ Rekomendasi Jurus ${formName || 'Pokémon'}`}>
@@ -1359,19 +1357,19 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                       value={formChargedMove1}
                       onChange={(e) => setFormChargedMove1(e.target.value)}
                       placeholder="Ketik manual jurus 1..."
-                      className="w-full px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-slate-200 text-xs font-mono"
+                      className="w-full px-3 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-800 dark:text-slate-200 text-xs font-mono"
                     />
                   </div>
 
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <label className="text-xs font-bold text-amber-300 font-mono">Charged Move #2 (Opsional):</label>
+                      <label className="text-xs font-bold text-slate-800 dark:text-slate-200 font-mono">Charged Move #2 (Opsional):</label>
                       {formChargedMove2 && <MoveBadge moveName={formChargedMove2} category="Charged" size="xs" />}
                     </div>
                     <select
                       value={formChargedMove2}
                       onChange={(e) => setFormChargedMove2(e.target.value)}
-                      className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 text-xs focus:outline-none focus:border-amber-500 font-mono cursor-pointer"
+                      className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:border-emerald-500 font-mono cursor-pointer"
                     >
                       <option value="">-- Pilih Charged Move 2 (Kosongkan bila 1 move) --</option>
                       <optgroup label={`⭐ Rekomendasi Jurus ${formName || 'Pokémon'}`}>
@@ -1403,31 +1401,31 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                       value={formChargedMove2}
                       onChange={(e) => setFormChargedMove2(e.target.value)}
                       placeholder="Ketik manual jurus 2..."
-                      className="w-full px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-slate-200 text-xs font-mono"
+                      className="w-full px-3 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-800 dark:text-slate-200 text-xs font-mono"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Expandable 18-Type Complete Move Catalog Explorer */}
-              <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-3 font-mono">
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-3 font-mono">
                 <button
                   type="button"
                   onClick={() => setIsMoveCatalogOpen(!isMoveCatalogOpen)}
-                  className="w-full flex items-center justify-between text-xs font-bold text-slate-300 hover:text-cyan-300 transition cursor-pointer"
+                  className="w-full flex items-center justify-between text-xs font-bold text-slate-800 dark:text-slate-200 hover:text-emerald-600 transition cursor-pointer"
                 >
                   <span className="flex items-center gap-1.5">
-                    <BookOpen className="w-4 h-4 text-cyan-400" />
+                    <BookOpen className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                     <span>Katalog Semua Jurus Pokémon GO (18 Tipe Elemen)</span>
                   </span>
-                  <span className="flex items-center gap-1 text-[11px] text-slate-400">
+                  <span className="flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400">
                     <span>{isMoveCatalogOpen ? 'Sembunyikan' : 'Buka & Pilih Elemen'}</span>
                     {isMoveCatalogOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </span>
                 </button>
 
                 {isMoveCatalogOpen && (
-                  <div className="space-y-3 pt-2 border-t border-slate-800">
+                  <div className="space-y-3 pt-2 border-t border-slate-200 dark:border-slate-700">
                     {/* Category Selector (Fast vs Charged) */}
                     <div className="flex items-center gap-2">
                       <button
@@ -1435,8 +1433,8 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                         onClick={() => setCatalogCategory('Fast')}
                         className={`px-3 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
                           catalogCategory === 'Fast'
-                            ? 'bg-cyan-600 text-white'
-                            : 'bg-slate-900 text-slate-400 hover:text-slate-200'
+                            ? 'bg-emerald-600 text-white'
+                            : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900'
                         }`}
                       >
                         ⚡ Fast Moves
@@ -1447,7 +1445,7 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                         className={`px-3 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
                           catalogCategory === 'Charged'
                             ? 'bg-amber-600 text-white'
-                            : 'bg-slate-900 text-slate-400 hover:text-slate-200'
+                            : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900'
                         }`}
                       >
                         💥 Charged Moves
@@ -1460,7 +1458,7 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                           value={catalogSearch}
                           onChange={(e) => setCatalogSearch(e.target.value)}
                           placeholder="Cari nama jurus (cth: Yawn, Hydro, Blast)..."
-                          className="w-full px-2.5 py-1 bg-slate-900 border border-slate-800 rounded-lg text-slate-200 text-xs focus:outline-none focus:border-cyan-500"
+                          className="w-full px-2.5 py-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:border-emerald-500"
                         />
                       </div>
                     </div>
@@ -1472,8 +1470,8 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                         onClick={() => setCatalogTypeFilter('all')}
                         className={`px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer transition ${
                           catalogTypeFilter === 'all'
-                            ? 'bg-slate-200 text-slate-900'
-                            : 'bg-slate-900 text-slate-400 hover:text-slate-200'
+                            ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900'
+                            : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900'
                         }`}
                       >
                         Semua Tipe
@@ -1485,8 +1483,8 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                           onClick={() => setCatalogTypeFilter(t)}
                           className={`px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer transition flex items-center gap-1 ${
                             catalogTypeFilter === t
-                              ? 'bg-cyan-500 text-slate-950 font-black'
-                              : 'bg-slate-900 text-slate-400 hover:text-slate-200'
+                              ? 'bg-emerald-600 text-white font-black'
+                              : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900'
                           }`}
                         >
                           <span>{TYPE_EMOJI_MAP[t]}</span>
@@ -1496,7 +1494,7 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                     </div>
 
                     {/* Move Grid Display with 1-Click Assignment */}
-                    <div className="max-h-52 overflow-y-auto p-2 bg-slate-900/60 rounded-xl border border-slate-800/80 space-y-2">
+                    <div className="max-h-52 overflow-y-auto p-2 bg-white dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
                       {POKEMON_TYPES.filter((t) => catalogTypeFilter === 'all' || catalogTypeFilter === t).map((t) => {
                         const moves = (catalogCategory === 'Fast' ? TYPE_FAST_MOVES[t] : TYPE_CHARGED_MOVES[t]) || [];
                         const filteredMoves = catalogSearch
@@ -1507,10 +1505,10 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
 
                         return (
                           <div key={`cat-grid-${t}`} className="space-y-1">
-                            <div className="text-[10px] font-bold text-slate-400 flex items-center gap-1">
+                            <div className="text-[10px] font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1">
                               <span>{TYPE_EMOJI_MAP[t]}</span>
                               <span className="uppercase">{t}</span>
-                              <span className="text-slate-600">({filteredMoves.length})</span>
+                              <span className="text-slate-400">({filteredMoves.length})</span>
                             </div>
                             <div className="flex flex-wrap gap-1.5">
                               {filteredMoves.map((m) => (
@@ -1545,7 +1543,7 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
 
               {/* Role Tags Selection */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-300 uppercase tracking-wider font-mono">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider font-mono">
                   Label / Tag Peran (Pilih yang sesuai):
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono">
@@ -1556,10 +1554,10 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
                         key={r.role}
                         type="button"
                         onClick={() => handleToggleRole(r.role)}
-                        className={`flex items-center gap-1.5 p-2 rounded-xl text-left border text-xs transition cursor-pointer ${
+                        className={`flex items-center gap-1.5 p-2 rounded-xl text-left border text-xs transition cursor-pointer font-semibold ${
                           isSelected
-                            ? 'bg-cyan-950 border-cyan-500 text-cyan-300 font-bold shadow-sm'
-                            : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'
+                            ? 'bg-emerald-100 dark:bg-emerald-950 border-emerald-500 text-emerald-900 dark:text-emerald-200 font-bold shadow-xs'
+                            : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100'
                         }`}
                       >
                         <span>{r.icon}</span>
@@ -1572,28 +1570,28 @@ export const StorageManager: React.FC<StorageManagerProps> = ({ onUpdateStats })
 
               {/* Notes */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-300 font-mono">Catatan Pribadi (Opsional):</label>
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono">Catatan Pribadi (Opsional):</label>
                 <textarea
                   value={formNotes}
                   onChange={(e) => setFormNotes(e.target.value)}
                   placeholder="Contoh: Didapat dari Raid Rayquaza Mega Battle Day, sudah max level 50..."
                   rows={2}
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-cyan-500 text-xs font-mono"
+                  className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 text-xs font-mono"
                 />
               </div>
 
               {/* Modal Actions */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition cursor-pointer font-mono"
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition cursor-pointer font-mono"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/25 transition cursor-pointer font-mono uppercase tracking-wider"
+                  className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition cursor-pointer font-mono uppercase tracking-wider"
                 >
                   {editingItem ? 'Perbarui Data' : 'Simpan ke Inventory'}
                 </button>

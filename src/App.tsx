@@ -83,7 +83,7 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white relative overflow-x-hidden" style={{ backgroundColor: '#020617' }}>
+    <div className="min-h-screen bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-100 flex flex-col font-sans selection:bg-emerald-500 selection:text-white relative overflow-x-hidden transition-colors">
       {/* High Quality Splash Screen Component */}
       {(showSplash || isManualSplashPreview) && (
         <SplashScreen
@@ -95,12 +95,12 @@ export default function App() {
         />
       )}
 
-      {/* Immersive HUD Ambient Glows */}
-      <div className="fixed top-0 left-1/4 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[160px] pointer-events-none -z-10"></div>
-      <div className="fixed top-1/3 right-1/4 w-[400px] h-[400px] bg-violet-600/10 rounded-full blur-[150px] pointer-events-none -z-10"></div>
-      <div className="fixed bottom-10 left-1/3 w-[500px] h-[500px] bg-cyan-600/10 rounded-full blur-[160px] pointer-events-none -z-10"></div>
+      {/* Ambient Glows */}
+      <div className="fixed top-0 left-1/4 w-[500px] h-[500px] bg-emerald-500/5 dark:bg-emerald-600/10 rounded-full blur-[160px] pointer-events-none -z-10"></div>
+      <div className="fixed top-1/3 right-1/4 w-[400px] h-[400px] bg-teal-500/5 dark:bg-teal-600/10 rounded-full blur-[150px] pointer-events-none -z-10"></div>
+      <div className="fixed bottom-10 left-1/3 w-[500px] h-[500px] bg-sky-500/5 dark:bg-cyan-600/10 rounded-full blur-[160px] pointer-events-none -z-10"></div>
 
-      {/* Top Navigation Bar with Immersive UI Styling */}
+      {/* Top Navigation Bar with Pokémon GO Theme */}
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -119,47 +119,42 @@ export default function App() {
         {activeTab === 'coordinates' && <CoordinateTimeHub />}
       </main>
 
-      {/* Immersive HUD Bottom Status Bar */}
-      <footer className="w-full bg-slate-950/90 backdrop-blur-md border-t border-indigo-500/20 py-3 text-[10px] text-slate-500 font-mono z-30">
+      {/* Clean Bottom Status Bar */}
+      <footer className="w-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 py-3.5 text-xs text-slate-600 dark:text-slate-400 z-30 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-4 text-slate-400">
+          <div className="flex flex-wrap items-center gap-3 text-slate-600 dark:text-slate-400">
             <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
-              <span className="text-slate-300 font-bold tracking-tight uppercase">STATUS: ONLINE</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="text-slate-800 dark:text-slate-200 font-bold tracking-tight">STATUS: ONLINE</span>
             </div>
-            <span className="text-slate-800">|</span>
+            <span className="text-slate-300 dark:text-slate-700">|</span>
             <div className="flex items-center gap-1">
-              <Cpu className="w-3 h-3 text-indigo-400" />
-              <span>POKEAPI: <span className="text-emerald-400 font-bold">CONNECTED</span></span>
+              <Cpu className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+              <span>PokéAPI: <span className="text-emerald-700 dark:text-emerald-400 font-semibold">Terkoneksi</span></span>
             </div>
-            <span className="text-slate-800">|</span>
+            <span className="text-slate-300 dark:text-slate-700">|</span>
             <div className="flex items-center gap-1">
-              <Activity className="w-3 h-3 text-cyan-400" />
-              <span>STORAGE: <span className="text-indigo-300 font-bold">LOCAL_SYNCED</span></span>
-            </div>
-            <span className="text-slate-800">|</span>
-            <div className="flex items-center gap-1">
-              <Smartphone className="w-3 h-3 text-indigo-400" />
-              <span>PWA: <span className="text-emerald-400 font-bold">STANDALONE_READY</span></span>
+              <Activity className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" />
+              <span>Storage: <span className="text-slate-800 dark:text-slate-200 font-semibold">Tersimpan Lokal</span></span>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <button
               onClick={() => setIsPwaModalOpen(true)}
-              className="hover:text-indigo-300 text-slate-400 transition cursor-pointer flex items-center gap-1.5 uppercase font-bold tracking-wider hover:underline"
+              className="hover:text-emerald-600 dark:hover:text-emerald-400 text-slate-600 dark:text-slate-400 transition cursor-pointer flex items-center gap-1.5 font-semibold hover:underline"
             >
-              <Smartphone className="w-3.5 h-3.5 text-indigo-400" /> Install PWA
+              <Smartphone className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Install PWA
             </button>
-            <span className="text-slate-800">|</span>
+            <span className="text-slate-300 dark:text-slate-700">|</span>
             <button
               onClick={() => setIsHelpOpen(true)}
-              className="hover:text-indigo-400 text-slate-400 transition cursor-pointer flex items-center gap-1.5 uppercase font-bold tracking-wider hover:underline"
+              className="hover:text-emerald-600 dark:hover:text-emerald-400 text-slate-600 dark:text-slate-400 transition cursor-pointer flex items-center gap-1.5 font-semibold hover:underline"
             >
-              <Terminal className="w-3.5 h-3.5 text-indigo-400" /> Guide & Deploy
+              <HelpCircle className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Panduan
             </button>
-            <span className="text-slate-800">|</span>
-            <span className="text-slate-500 uppercase tracking-widest">EST. 2024 POKÉDASH HUD</span>
+            <span className="text-slate-300 dark:text-slate-700">|</span>
+            <span className="text-slate-500 dark:text-slate-400">PokéGO Master Hub</span>
           </div>
         </div>
       </footer>

@@ -281,45 +281,44 @@ export const CoordinateTimeHub: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      {/* Header Banner */}
-      <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-950 border border-indigo-500/40 shadow-2xl shadow-indigo-950/30 space-y-4">
+      {/* Header Banner - Pokémon GO Emerald Palette */}
+      <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white shadow-md space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 text-indigo-400 font-bold text-xs uppercase tracking-widest font-mono mb-1">
-              <span className="w-1.5 h-3.5 bg-indigo-500 rounded-sm"></span>
-              <Globe className="w-3.5 h-3.5" /> World Timezones & Coordinate Hub
+            <div className="flex items-center gap-1.5 text-emerald-100 font-bold text-xs uppercase tracking-wider mb-1">
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" /> World Timezones & Coordinate Hub
             </div>
-            <h2 className="text-xl sm:text-2xl font-black text-slate-100 tracking-tight font-mono">
+            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
               Coordinate Book & Global Event Converter
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1">
+            <p className="text-xs sm:text-sm text-emerald-50 mt-1 max-w-2xl font-medium leading-relaxed">
               Daftar koordinat hotspot dunia dengan jam digital live per zona waktu serta kalkulator konversi jadwal event global ke Waktu Indonesia Barat (WIB).
             </p>
           </div>
 
           {/* Sub-tab switcher */}
-          <div className="flex items-center p-1 bg-slate-950 rounded-xl border border-indigo-500/30 self-start md:self-auto shadow-inner">
+          <div className="flex items-center p-1 bg-black/20 backdrop-blur-sm rounded-xl border border-white/20 self-start md:self-auto shadow-inner">
             <button
               onClick={() => setSubTab('coordinates')}
-              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 subTab === 'coordinates'
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/40'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-white text-emerald-950 shadow-sm'
+                  : 'text-white/80 hover:text-white hover:bg-white/10'
               }`}
             >
               <Compass className="w-4 h-4" />
-              <span>Coordinate Book & Live Clocks</span>
+              <span>Coordinate Book & Clocks</span>
             </button>
             <button
               onClick={() => setSubTab('event-converter')}
-              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 subTab === 'event-converter'
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/40'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-white text-emerald-950 shadow-sm'
+                  : 'text-white/80 hover:text-white hover:bg-white/10'
               }`}
             >
               <Calendar className="w-4 h-4" />
-              <span>Global Event Converter (WIB)</span>
+              <span>Event Converter (WIB)</span>
             </button>
           </div>
         </div>
@@ -329,15 +328,15 @@ export const CoordinateTimeHub: React.FC = () => {
       {subTab === 'coordinates' && (
         <div className="space-y-6">
           {/* Controls Bar: Search + Category + Add Custom Spot */}
-          <div className="p-4 rounded-2xl bg-slate-900/60 backdrop-blur-md border border-slate-800 flex flex-col sm:flex-row gap-3 items-center justify-between">
+          <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col sm:flex-row gap-3 items-center justify-between">
             <div className="relative w-full sm:w-80">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-400" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <input
                 type="text"
                 value={searchCoords}
                 onChange={(e) => setSearchCoords(e.target.value)}
                 placeholder="Cari lokasi, kota, negara, atau hotspot..."
-                className="w-full pl-10 pr-4 py-2 bg-slate-950 border border-indigo-500/30 rounded-xl text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-indigo-400 font-mono transition"
+                className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-500 font-mono transition"
               />
             </div>
 
@@ -345,7 +344,7 @@ export const CoordinateTimeHub: React.FC = () => {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-3 py-2 bg-slate-950 border border-indigo-500/30 rounded-xl text-xs text-slate-300 focus:outline-none focus:border-indigo-400 cursor-pointer font-mono"
+                className="px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer font-mono font-semibold"
               >
                 <option value="all">Semua Kategori ({spots.length})</option>
                 <option value="Indonesia Hotspot">🇮🇩 Indonesia Hotspot</option>
@@ -357,7 +356,7 @@ export const CoordinateTimeHub: React.FC = () => {
 
               <button
                 onClick={() => setIsAddSpotModalOpen(true)}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-[0_0_15px_rgba(79,70,229,0.35)] transition cursor-pointer font-mono uppercase tracking-wider"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/30 transition cursor-pointer font-mono uppercase tracking-wider"
               >
                 <Plus className="w-4 h-4 stroke-[3]" />
                 <span>Tambah Titik Koordinat</span>
@@ -375,56 +374,56 @@ export const CoordinateTimeHub: React.FC = () => {
               return (
                 <div
                   key={spot.id}
-                  className="p-5 rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 hover:border-slate-700 transition-all duration-200 shadow-md space-y-4 relative group"
+                  className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 dark:hover:border-emerald-500/50 transition-all duration-200 shadow-xs space-y-3.5 relative group"
                 >
                   {/* Top Bar: Flag & Name */}
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-start gap-2.5">
                       <span className="text-2xl">{spot.flag}</span>
                       <div>
-                        <h4 className="text-base font-bold text-slate-100 tracking-tight leading-snug">
+                        <h4 className="text-base font-bold text-slate-900 dark:text-slate-100 tracking-tight leading-snug">
                           {spot.name}
                         </h4>
-                        <div className="text-xs text-slate-400">
+                        <div className="text-xs text-slate-600 dark:text-slate-400 font-medium">
                           {spot.city}, {spot.country}
                         </div>
                       </div>
                     </div>
 
                     {/* Category Pill */}
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800/80 text-slate-300 border border-slate-700 whitespace-nowrap">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 whitespace-nowrap">
                       {spot.category}
                     </span>
                   </div>
 
                   {/* Live Clock Card */}
-                  <div className="p-3 bg-slate-950 rounded-xl border border-slate-800/80 flex items-center justify-between">
+                  <div className="p-3 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <div className="text-[10px] text-slate-400 uppercase tracking-wider flex items-center gap-1 font-mono">
-                        <Clock className="w-3 h-3 text-teal-400" />
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1 font-mono font-medium">
+                        <Clock className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                         <span>Waktu Lokal ({spot.timeZone.split('/')[1] || spot.timeZone}):</span>
                       </div>
-                      <div className="text-lg font-black text-slate-100 font-mono tracking-wider flex items-center gap-2">
+                      <div className="text-lg font-black text-slate-900 dark:text-slate-100 font-mono tracking-wider flex items-center gap-2">
                         <span>{live.timeStr}</span>
                         {live.isNight ? (
-                          <Moon className="w-3.5 h-3.5 text-indigo-400" title="Malam Hari" />
+                          <Moon className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" title="Malam Hari" />
                         ) : (
-                          <Sun className="w-3.5 h-3.5 text-amber-400" title="Siang Hari" />
+                          <Sun className="w-3.5 h-3.5 text-amber-500" title="Siang Hari" />
                         )}
                       </div>
-                      <div className="text-[10px] text-slate-400">{live.dateStr}</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">{live.dateStr}</div>
                     </div>
 
                     {/* Time diff vs WIB */}
                     <div className="text-right">
-                      <span className="text-[10px] text-slate-400 block">Selisih vs WIB:</span>
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400 block font-medium">Selisih vs WIB:</span>
                       <span
-                        className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${
+                        className={`text-xs font-mono font-bold px-2 py-0.5 rounded border ${
                           diffHours === 0
-                            ? 'bg-emerald-950 text-emerald-300 border border-emerald-700'
+                            ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-300 border-emerald-300 dark:border-emerald-700'
                             : diffHours > 0
-                            ? 'bg-cyan-950 text-cyan-300 border border-cyan-700'
-                            : 'bg-amber-950 text-amber-300 border border-amber-700'
+                            ? 'bg-cyan-100 dark:bg-cyan-950/60 text-cyan-900 dark:text-cyan-300 border-cyan-300 dark:border-cyan-700'
+                            : 'bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 border-amber-300 dark:border-amber-700'
                         }`}
                       >
                         {diffHours === 0 ? 'WIB (0j)' : diffHours > 0 ? `+${diffHours} Jam` : `${diffHours} Jam`}
@@ -433,23 +432,23 @@ export const CoordinateTimeHub: React.FC = () => {
                   </div>
 
                   {/* Description */}
-                  <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed font-medium">
                     {spot.description}
                   </p>
 
                   {/* Bottom: Coordinates Bar + One Click Copy */}
-                  <div className="pt-2 border-t border-slate-800/60 flex items-center justify-between gap-2">
-                    <div className="text-xs font-mono text-slate-300 bg-slate-950 px-2.5 py-1.5 rounded-lg border border-slate-800 truncate">
+                  <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2">
+                    <div className="text-xs font-mono text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 truncate font-semibold">
                       {spot.lat}, {spot.lng}
                     </div>
 
                     <div className="flex items-center gap-1.5">
                       <button
                         onClick={() => handleCopyCoordinate(spot)}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer font-mono ${
                           isCopied
-                            ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20'
-                            : 'bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white'
+                            ? 'bg-emerald-600 text-white shadow-sm shadow-emerald-600/30'
+                            : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-300 border border-slate-200 dark:border-slate-700'
                         }`}
                       >
                         {isCopied ? (
@@ -459,7 +458,7 @@ export const CoordinateTimeHub: React.FC = () => {
                           </>
                         ) : (
                           <>
-                            <Copy className="w-3.5 h-3.5" />
+                            <Copy className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                             <span>Copy</span>
                           </>
                         )}
@@ -468,7 +467,7 @@ export const CoordinateTimeHub: React.FC = () => {
                       {!spot.isDefault && (
                         <button
                           onClick={() => handleDeleteSpot(spot.id)}
-                          className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-slate-800 transition cursor-pointer"
+                          className="p-1.5 rounded-lg text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
                           title="Hapus titik kustom"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -487,45 +486,45 @@ export const CoordinateTimeHub: React.FC = () => {
       {subTab === 'event-converter' && (
         <div className="space-y-6">
           {/* Planner Setup Card */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-4">
+          <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
             <div>
-              <h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-teal-400" />
+              <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2 font-mono">
+                <Calendar className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                 Konfigurasi Jam Event Global Pokémon GO
               </h3>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 font-medium">
                 Masukkan jam lokal diadakannya event (misal Community Day jam 14:00 - 17:00 waktu setempat). Aplikasi otomatis menghitung jam tayang dalam <strong>Waktu Indonesia Barat (WIB)</strong> dan mengurutkannya dari yang paling pagi!
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-2">
               <div className="sm:col-span-2 space-y-1.5">
-                <label className="text-xs font-bold text-slate-300">Nama Event:</label>
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono">Nama Event:</label>
                 <input
                   type="text"
                   value={eventName}
                   onChange={(e) => setEventName(e.target.value)}
                   placeholder="Contoh: Community Day, Raid Day, Spotlight Hour..."
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs sm:text-sm text-slate-100 focus:outline-none focus:border-teal-500"
+                  className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-mono"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-300">Jam Mulai Lokal:</label>
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono">Jam Mulai Lokal:</label>
                 <input
                   type="time"
                   value={localStartTime}
                   onChange={(e) => setLocalStartTime(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs sm:text-sm text-slate-100 focus:outline-none focus:border-teal-500"
+                  className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-mono"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-300">Durasi (Jam):</label>
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono">Durasi (Jam):</label>
                 <select
                   value={durationHours}
                   onChange={(e) => setDurationHours(parseInt(e.target.value, 10))}
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs sm:text-sm text-slate-100 focus:outline-none focus:border-teal-500 cursor-pointer font-mono"
+                  className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 cursor-pointer font-mono font-semibold"
                 >
                   <option value={1}>1 Jam (Spotlight / Raid Hour)</option>
                   <option value={3}>3 Jam (Community Day)</option>
@@ -537,19 +536,19 @@ export const CoordinateTimeHub: React.FC = () => {
           </div>
 
           {/* Schedule Table in WIB (Earliest to Latest) */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
+          <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200 dark:border-slate-800">
               <div>
-                <h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-emerald-400" />
+                <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2 font-mono">
+                  <TrendingUp className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   Jadwal Urutan Event Konversi WIB (Timezone Hopping Order)
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
                   Diurutkan otomatis dari wilayah yang mulai paling pagi hingga paling malam dalam waktu WIB.
                 </p>
               </div>
 
-              <div className="text-xs text-emerald-400 font-mono font-bold bg-emerald-950/60 px-3 py-1 rounded-xl border border-emerald-800">
+              <div className="text-xs text-emerald-800 dark:text-emerald-300 font-mono font-bold bg-emerald-100 dark:bg-emerald-950/60 px-3 py-1 rounded-xl border border-emerald-300 dark:border-emerald-700">
                 Zona Waktu Referensi: WIB (UTC+7)
               </div>
             </div>
@@ -558,20 +557,20 @@ export const CoordinateTimeHub: React.FC = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs sm:text-sm border-collapse">
                 <thead>
-                  <tr className="border-b border-slate-800 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                  <tr className="border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider font-mono">
                     <th className="py-3 px-3">No & Lokasi Hotspot</th>
-                    <th className="py-3 px-3 text-cyan-400">Zona UTC & Selisih</th>
+                    <th className="py-3 px-3 text-emerald-700 dark:text-emerald-400">Zona UTC & Selisih</th>
                     <th className="py-3 px-3">Jam Lokal</th>
-                    <th className="py-3 px-3 text-amber-400">Jadwal di WIB (UTC+7)</th>
+                    <th className="py-3 px-3 text-amber-700 dark:text-amber-400">Jadwal di WIB (UTC+7)</th>
                     <th className="py-3 px-3">Status Event</th>
                     <th className="py-3 px-3 text-right">Koordinat</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60">
+                <tbody className="divide-y divide-slate-200 dark:divide-slate-800/80">
                   {hoppingSchedule.map((item, idx) => {
                     const isCopied = copiedId === item.spot.id;
                     let statusBadge = (
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-400 border border-slate-700">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
                         {item.timeUntilOrRemaining}
                       </span>
                     );
@@ -584,7 +583,7 @@ export const CoordinateTimeHub: React.FC = () => {
                       );
                     } else if (item.status === 'upcoming') {
                       statusBadge = (
-                        <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-cyan-950 text-cyan-300 border border-cyan-700">
+                        <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700">
                           ⏳ {item.timeUntilOrRemaining}
                         </span>
                       );
@@ -593,17 +592,17 @@ export const CoordinateTimeHub: React.FC = () => {
                     return (
                       <tr
                         key={item.spot.id}
-                        className={`hover:bg-slate-800/30 transition ${
-                          item.status === 'live' ? 'bg-emerald-950/20' : ''
+                        className={`hover:bg-slate-50 dark:hover:bg-slate-800/50 transition ${
+                          item.status === 'live' ? 'bg-emerald-50/70 dark:bg-emerald-950/30' : ''
                         }`}
                       >
                         <td className="py-3 px-3">
                           <div className="flex items-center gap-2">
-                            <span className="text-slate-500 font-mono text-xs w-4">#{idx + 1}</span>
+                            <span className="text-slate-400 dark:text-slate-500 font-mono text-xs w-4">#{idx + 1}</span>
                             <span className="text-base">{item.spot.flag}</span>
                             <div>
-                              <div className="font-bold text-slate-100">{item.spot.name}</div>
-                              <div className="text-[11px] text-slate-400">
+                              <div className="font-bold text-slate-900 dark:text-slate-100 font-mono">{item.spot.name}</div>
+                              <div className="text-[11px] text-slate-600 dark:text-slate-400 font-medium">
                                 {item.spot.city}, {item.spot.country}
                               </div>
                             </div>
@@ -613,16 +612,16 @@ export const CoordinateTimeHub: React.FC = () => {
                         {/* UTC Offset & Difference vs WIB */}
                         <td className="py-3 px-3 font-mono">
                           <div className="flex items-center gap-1.5">
-                            <span className="px-2 py-0.5 rounded text-xs font-bold bg-indigo-950/80 text-indigo-300 border border-indigo-700/60">
+                            <span className="px-2 py-0.5 rounded text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700">
                               {item.utcOffsetStr}
                             </span>
                             <span
-                              className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                              className={`text-[10px] font-bold px-1.5 py-0.5 rounded border ${
                                 item.timeDifferenceWibHours === 0
-                                  ? 'bg-emerald-950/80 text-emerald-400 border border-emerald-800/80'
+                                  ? 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-900 dark:text-emerald-300 border-emerald-300 dark:border-emerald-700'
                                   : item.timeDifferenceWibHours > 0
-                                  ? 'bg-cyan-950/80 text-cyan-400 border border-cyan-800/80'
-                                  : 'bg-amber-950/80 text-amber-400 border border-amber-800/80'
+                                  ? 'bg-cyan-100 dark:bg-cyan-950/80 text-cyan-900 dark:text-cyan-300 border-cyan-300 dark:border-cyan-700'
+                                  : 'bg-amber-100 dark:bg-amber-950/80 text-amber-900 dark:text-amber-300 border-amber-300 dark:border-amber-700'
                               }`}
                             >
                               {item.timeDifferenceWibHours === 0
@@ -632,21 +631,21 @@ export const CoordinateTimeHub: React.FC = () => {
                                 : `${item.timeDifferenceWibHours}j vs WIB`}
                             </span>
                           </div>
-                          <div className="text-[10px] text-slate-500 mt-0.5 truncate max-w-[140px]" title={item.spot.timeZone}>
+                          <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 truncate max-w-[140px]" title={item.spot.timeZone}>
                             {item.spot.timeZone}
                           </div>
                         </td>
 
-                        <td className="py-3 px-3 font-mono text-slate-300">
-                          <div className="font-semibold text-slate-200">{item.localStart} - {item.localEnd}</div>
-                          <div className="text-[10px] text-slate-400">Waktu Kota Setempat</div>
+                        <td className="py-3 px-3 font-mono text-slate-800 dark:text-slate-200">
+                          <div className="font-bold">{item.localStart} - {item.localEnd}</div>
+                          <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Waktu Kota Setempat</div>
                         </td>
 
                         <td className="py-3 px-3 font-mono">
-                          <div className="font-bold text-amber-300 text-sm">
+                          <div className="font-bold text-amber-700 dark:text-amber-400 text-sm">
                             {item.wibStart} - {item.wibEnd} WIB
                           </div>
-                          <div className="text-[10px] text-slate-400">{item.wibDateStr}</div>
+                          <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">{item.wibDateStr}</div>
                         </td>
 
                         <td className="py-3 px-3">{statusBadge}</td>
@@ -654,13 +653,13 @@ export const CoordinateTimeHub: React.FC = () => {
                         <td className="py-3 px-3 text-right">
                           <button
                             onClick={() => handleCopyCoordinate(item.spot)}
-                            className={`px-2.5 py-1 rounded text-xs font-bold transition cursor-pointer inline-flex items-center gap-1 ${
+                            className={`px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer inline-flex items-center gap-1 font-mono ${
                               isCopied
-                                ? 'bg-emerald-500 text-slate-950'
-                                : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
+                                ? 'bg-emerald-600 text-white shadow-xs'
+                                : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
                             }`}
                           >
-                            {isCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                            {isCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />}
                             <span>{isCopied ? 'Tersalin' : 'Copy'}</span>
                           </button>
                         </td>
@@ -673,19 +672,19 @@ export const CoordinateTimeHub: React.FC = () => {
           </div>
 
           {/* Interactive Cooldown Distance Calculator & Countdown Timer */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-indigo-950/60 via-slate-900 to-slate-950 border border-indigo-500/40 shadow-xl space-y-5">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-indigo-500/30">
+          <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-emerald-950/40 via-slate-900 to-teal-950/40 border border-emerald-500/40 shadow-xl space-y-5 text-slate-100">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-emerald-500/30">
               <div>
                 <div className="flex items-center gap-2 font-bold text-slate-100 text-base font-mono">
-                  <ShieldCheck className="w-5 h-5 text-indigo-400" />
+                  <ShieldCheck className="w-5 h-5 text-emerald-400" />
                   Kalkulator Jeda Cooldown Berpindah Wilayah (Softban Guard)
                 </div>
-                <p className="text-xs text-slate-400 mt-1">
+                <p className="text-xs text-slate-400 mt-1 font-sans">
                   Hitung jarak otomatis antar dua koordinat dan ketahui persis durasi cooldown yang dibutuhkan. Nyalakan timer untuk memantau sisa waktu cooldown Anda.
                 </p>
               </div>
 
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-950/80 border border-indigo-500/30 text-indigo-300 text-xs font-mono">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-mono font-bold">
                 <Flame className="w-3.5 h-3.5 text-amber-400" />
                 <span>Anti-Softban Protection</span>
               </div>
@@ -694,12 +693,12 @@ export const CoordinateTimeHub: React.FC = () => {
             {/* Coordinate Input Form */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
               {/* Origin Coordinate */}
-              <div className="lg:col-span-5 space-y-2 p-4 rounded-xl bg-slate-950/80 border border-indigo-500/20">
+              <div className="lg:col-span-5 space-y-2 p-4 rounded-xl bg-slate-900/90 border border-emerald-500/30">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-indigo-300 flex items-center gap-1.5 font-mono">
-                    <Navigation className="w-3.5 h-3.5 text-indigo-400" /> 1. Koordinat Asal / Sekarang:
+                  <label className="text-xs font-bold text-emerald-300 flex items-center gap-1.5 font-mono">
+                    <Navigation className="w-3.5 h-3.5 text-emerald-400" /> 1. Koordinat Asal / Sekarang:
                   </label>
-                  <span className="text-[10px] text-slate-500 font-mono">Format: Lat, Lng</span>
+                  <span className="text-[10px] text-slate-400 font-mono">Format: Lat, Lng</span>
                 </div>
                 <input
                   type="text"
@@ -709,14 +708,14 @@ export const CoordinateTimeHub: React.FC = () => {
                     setSelectedQuickOrigin('');
                   }}
                   placeholder="Contoh: -6.1754, 106.8272"
-                  className="w-full px-3.5 py-2.5 bg-slate-900 border border-indigo-500/30 rounded-xl text-xs sm:text-sm text-slate-100 font-mono focus:outline-none focus:border-indigo-400 transition"
+                  className="w-full px-3.5 py-2.5 bg-slate-800 border border-emerald-500/30 rounded-xl text-xs sm:text-sm text-slate-100 font-mono focus:outline-none focus:border-emerald-400 transition"
                 />
                 {/* Quick preset selector */}
                 <div className="pt-1">
                   <select
                     value={selectedQuickOrigin}
                     onChange={(e) => handleSelectQuickOrigin(e.target.value)}
-                    className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded-lg text-[11px] text-slate-300 focus:outline-none focus:border-indigo-400 font-mono"
+                    className="w-full px-2.5 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-[11px] text-slate-200 focus:outline-none focus:border-emerald-400 font-mono"
                   >
                     <option value="">-- Pilih dari Daftar Hotspot Terkenal --</option>
                     {spots.map((s) => (
@@ -733,7 +732,7 @@ export const CoordinateTimeHub: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleSwapCoordinates}
-                  className="p-3 rounded-xl bg-slate-800/90 hover:bg-indigo-600 border border-indigo-500/30 text-indigo-300 hover:text-white transition-all shadow-md cursor-pointer group"
+                  className="p-3 rounded-xl bg-slate-800 hover:bg-emerald-600 border border-emerald-500/30 text-emerald-300 hover:text-white transition-all shadow-md cursor-pointer group"
                   title="Tukar Posisi Koordinat"
                 >
                   <ArrowDownUp className="w-5 h-5 group-hover:rotate-180 transition-transform duration-300" />
@@ -741,12 +740,12 @@ export const CoordinateTimeHub: React.FC = () => {
               </div>
 
               {/* Target Coordinate */}
-              <div className="lg:col-span-5 space-y-2 p-4 rounded-xl bg-slate-950/80 border border-indigo-500/20">
+              <div className="lg:col-span-5 space-y-2 p-4 rounded-xl bg-slate-900/90 border border-emerald-500/30">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-cyan-300 flex items-center gap-1.5 font-mono">
-                    <MapPin className="w-3.5 h-3.5 text-cyan-400" /> 2. Koordinat Tujuan / Yang Dituju:
+                  <label className="text-xs font-bold text-teal-300 flex items-center gap-1.5 font-mono">
+                    <MapPin className="w-3.5 h-3.5 text-teal-400" /> 2. Koordinat Tujuan / Yang Dituju:
                   </label>
-                  <span className="text-[10px] text-slate-500 font-mono">Format: Lat, Lng</span>
+                  <span className="text-[10px] text-slate-400 font-mono">Format: Lat, Lng</span>
                 </div>
                 <input
                   type="text"
@@ -756,14 +755,14 @@ export const CoordinateTimeHub: React.FC = () => {
                     setSelectedQuickTarget('');
                   }}
                   placeholder="Contoh: 40.7829, -73.9654"
-                  className="w-full px-3.5 py-2.5 bg-slate-900 border border-indigo-500/30 rounded-xl text-xs sm:text-sm text-slate-100 font-mono focus:outline-none focus:border-cyan-400 transition"
+                  className="w-full px-3.5 py-2.5 bg-slate-800 border border-emerald-500/30 rounded-xl text-xs sm:text-sm text-slate-100 font-mono focus:outline-none focus:border-teal-400 transition"
                 />
                 {/* Quick preset selector */}
                 <div className="pt-1">
                   <select
                     value={selectedQuickTarget}
                     onChange={(e) => handleSelectQuickTarget(e.target.value)}
-                    className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded-lg text-[11px] text-slate-300 focus:outline-none focus:border-cyan-400 font-mono"
+                    className="w-full px-2.5 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-[11px] text-slate-200 focus:outline-none focus:border-teal-400 font-mono"
                   >
                     <option value="">-- Pilih dari Daftar Hotspot Terkenal --</option>
                     {spots.map((s) => (
@@ -779,9 +778,9 @@ export const CoordinateTimeHub: React.FC = () => {
             {/* Calculation Result & Interactive Countdown Timer HUD */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
               {/* Distance Result */}
-              <div className="p-4 rounded-xl bg-slate-950/90 border border-indigo-500/20 space-y-1">
+              <div className="p-4 rounded-xl bg-slate-900/90 border border-emerald-500/30 space-y-1">
                 <div className="text-[11px] text-slate-400 uppercase tracking-wider font-mono flex items-center gap-1.5">
-                  <Compass className="w-3.5 h-3.5 text-indigo-400" /> Jarak Geografis:
+                  <Compass className="w-3.5 h-3.5 text-emerald-400" /> Jarak Geografis:
                 </div>
                 <div className="text-xl font-black text-slate-100 font-mono tracking-wide">
                   {parsedOrigin && parsedTarget ? (
@@ -790,20 +789,20 @@ export const CoordinateTimeHub: React.FC = () => {
                     <span className="text-sm text-rose-400 font-sans">Format koordinat tidak valid</span>
                   )}
                 </div>
-                <div className="text-[10px] text-slate-500 font-mono">
+                <div className="text-[10px] text-slate-400 font-mono">
                   Dihitung berdasarkan Haversine formula
                 </div>
               </div>
 
               {/* Required Cooldown Result */}
-              <div className="p-4 rounded-xl bg-slate-950/90 border border-indigo-500/20 space-y-1">
+              <div className="p-4 rounded-xl bg-slate-900/90 border border-emerald-500/30 space-y-1">
                 <div className="text-[11px] text-slate-400 uppercase tracking-wider font-mono flex items-center gap-1.5">
                   <Clock className="w-3.5 h-3.5 text-amber-400" /> Wajib Jeda Cooldown:
                 </div>
                 <div className="text-xl font-black text-amber-300 font-mono tracking-wide">
                   {calculatedCooldown.formattedText}
                 </div>
-                <div className="text-[10px] text-slate-500 font-mono">
+                <div className="text-[10px] text-slate-400 font-mono">
                   {calculatedDistanceKm >= 1350
                     ? 'Jarak > 1350 km = batas maksimum (2 jam)'
                     : `Jeda aman sebelum interaksi berikutnya`}
@@ -811,9 +810,9 @@ export const CoordinateTimeHub: React.FC = () => {
               </div>
 
               {/* Countdown Timer HUD */}
-              <div className="p-4 rounded-xl bg-gradient-to-br from-slate-950 to-indigo-950/50 border border-indigo-500/40 space-y-2 relative overflow-hidden">
+              <div className="p-4 rounded-xl bg-gradient-to-br from-slate-900 to-emerald-950/60 border border-emerald-500/50 space-y-2 relative overflow-hidden">
                 <div className="flex items-center justify-between">
-                  <div className="text-[11px] text-indigo-300 uppercase tracking-wider font-mono flex items-center gap-1.5">
+                  <div className="text-[11px] text-emerald-300 uppercase tracking-wider font-mono flex items-center gap-1.5 font-bold">
                     <Timer className="w-3.5 h-3.5 text-emerald-400 animate-spin" /> Cooldown Timer:
                   </div>
                   {countdownRemainingSec === 0 && isTimerRunning === false && targetDurationSec > 0 && (
@@ -888,8 +887,8 @@ export const CoordinateTimeHub: React.FC = () => {
 
             {/* Softban Rule Chart */}
             <div className="pt-2">
-              <div className="text-xs font-bold text-slate-300 mb-2 font-mono flex items-center gap-1.5">
-                <Info className="w-3.5 h-3.5 text-indigo-400" /> Tabel Referensi Jarak vs Cooldown Pokémon GO:
+              <div className="text-xs font-bold text-slate-200 mb-2 font-mono flex items-center gap-1.5">
+                <Info className="w-3.5 h-3.5 text-emerald-400" /> Tabel Referensi Jarak vs Cooldown Pokémon GO:
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 font-mono text-xs">
                 {POGO_COOLDOWN_CHART.map((c) => (
@@ -902,12 +901,12 @@ export const CoordinateTimeHub: React.FC = () => {
                         : calculatedDistanceKm <= c.maxKm &&
                           (POGO_COOLDOWN_CHART[POGO_COOLDOWN_CHART.indexOf(c) - 1]?.maxKm || 0) <
                             calculatedDistanceKm)
-                        ? 'bg-indigo-950/80 border-indigo-400 text-indigo-200 shadow-md shadow-indigo-950/50 scale-[1.02]'
-                        : 'bg-slate-950 border-slate-800/80 text-slate-400'
+                        ? 'bg-emerald-950/90 border-emerald-400 text-emerald-200 shadow-md shadow-emerald-950/50 scale-[1.02]'
+                        : 'bg-slate-900 border-slate-800 text-slate-400'
                     }`}
                   >
-                    <div className="font-semibold text-slate-300">{c.distance}</div>
-                    <div className="text-indigo-400 font-bold text-[11px] mt-0.5">{c.cooldown}</div>
+                    <div className="font-semibold text-slate-200">{c.distance}</div>
+                    <div className="text-emerald-400 font-bold text-[11px] mt-0.5">{c.cooldown}</div>
                   </div>
                 ))}
               </div>
@@ -919,15 +918,15 @@ export const CoordinateTimeHub: React.FC = () => {
       {/* Add Custom Spot Modal */}
       {isAddSpotModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-150">
-          <div className="relative w-full max-w-lg bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/95">
-              <h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-teal-400" />
+          <div className="relative w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/80">
+              <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                 Tambah Titik Koordinat Kustom
               </h3>
               <button
                 onClick={() => setIsAddSpotModalOpen(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800"
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 cursor-pointer"
               >
                 ✕
               </button>
@@ -935,73 +934,73 @@ export const CoordinateTimeHub: React.FC = () => {
 
             <form onSubmit={handleAddCustomSpot} className="p-6 space-y-4 text-xs sm:text-sm">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-300">Nama Tempat / Hotspot:</label>
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono">Nama Tempat / Hotspot:</label>
                 <input
                   type="text"
                   value={newSpotName}
                   onChange={(e) => setNewSpotName(e.target.value)}
                   placeholder="Contoh: Taman Mini Indonesia Indah"
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-teal-500"
+                  className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-mono"
                   required
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-300">Kota:</label>
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono">Kota:</label>
                   <input
                     type="text"
                     value={newSpotCity}
                     onChange={(e) => setNewSpotCity(e.target.value)}
                     placeholder="Contoh: Jakarta"
-                    className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-teal-500"
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-mono"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-300">Negara:</label>
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono">Negara:</label>
                   <input
                     type="text"
                     value={newSpotCountry}
                     onChange={(e) => setNewSpotCountry(e.target.value)}
                     placeholder="Contoh: Indonesia"
-                    className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-teal-500"
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-mono"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-300">Latitude (Garis Lintang):</label>
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono">Latitude (Garis Lintang):</label>
                   <input
                     type="number"
                     step="any"
                     value={newSpotLat}
                     onChange={(e) => setNewSpotLat(e.target.value)}
                     placeholder="Contoh: -6.3024"
-                    className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-teal-500"
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-mono"
                     required
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-300">Longitude (Garis Bujur):</label>
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono">Longitude (Garis Bujur):</label>
                   <input
                     type="number"
                     step="any"
                     value={newSpotLng}
                     onChange={(e) => setNewSpotLng(e.target.value)}
                     placeholder="Contoh: 106.8951"
-                    className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-teal-500"
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-mono"
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-300">Timezone (Zona Waktu IANA):</label>
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono">Timezone (Zona Waktu IANA):</label>
                 <select
                   value={newSpotTimezone}
                   onChange={(e) => setNewSpotTimezone(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-teal-500 cursor-pointer"
+                  className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 cursor-pointer font-mono font-semibold"
                 >
                   <option value="Asia/Jakarta">Asia/Jakarta (WIB - UTC+7)</option>
                   <option value="Asia/Makassar">Asia/Makassar (WITA - UTC+8)</option>
@@ -1016,27 +1015,27 @@ export const CoordinateTimeHub: React.FC = () => {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-300">Deskripsi Singkat:</label>
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono">Deskripsi Singkat:</label>
                 <input
                   type="text"
                   value={newSpotDesc}
                   onChange={(e) => setNewSpotDesc(e.target.value)}
                   placeholder="Contoh: Spot farming sarang Dratini dan banyak Gym EX."
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-teal-500"
+                  className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-mono"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setIsAddSpotModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold cursor-pointer transition font-mono"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 text-slate-950 text-xs font-bold shadow-lg shadow-teal-500/25 cursor-pointer"
+                  className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-600/30 cursor-pointer transition font-mono"
                 >
                   Simpan Koordinat
                 </button>

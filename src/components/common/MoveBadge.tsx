@@ -59,8 +59,8 @@ export const MoveBadge: React.FC<MoveBadgeProps> = ({
   } ${className}`;
 
   const styleObj = {
-    backgroundColor: details.color + '22', // ~13% opacity
-    borderColor: details.color + '80', // 50% border
+    backgroundColor: details.color + '18', // ~10% tint
+    borderColor: details.color + '60', // 38% border
     borderWidth: '1px',
   };
 
@@ -73,20 +73,19 @@ export const MoveBadge: React.FC<MoveBadgeProps> = ({
         className={`inline-flex items-center justify-center rounded shrink-0 shadow-sm ${iconContainerSizes[size]}`}
         style={{ backgroundColor: details.color }}
       >
-        <IconComponent className={`${iconSizes[size]} text-slate-950`} strokeWidth={2.5} />
+        <IconComponent className={`${iconSizes[size]} text-white`} strokeWidth={2.5} />
       </span>
 
       {/* Move Name */}
-      <span className="text-slate-100 font-bold tracking-tight whitespace-nowrap">
+      <span className="text-slate-800 dark:text-slate-100 font-bold tracking-tight whitespace-nowrap">
         {moveName}
       </span>
 
       {/* Element Type Label */}
       <span
-        className="text-[9px] uppercase font-mono px-1 rounded font-bold opacity-90"
+        className="text-[9px] uppercase font-mono px-1 rounded font-bold text-white shadow-xs"
         style={{
-          color: details.color,
-          backgroundColor: details.color + '1f',
+          backgroundColor: details.color,
         }}
       >
         {moveType}
@@ -97,8 +96,8 @@ export const MoveBadge: React.FC<MoveBadgeProps> = ({
         <span
           className={`text-[8px] uppercase tracking-wider px-1 py-0.2 rounded font-black ${
             category === 'Fast'
-              ? 'bg-cyan-500/20 text-cyan-300'
-              : 'bg-amber-500/20 text-amber-300'
+              ? 'bg-cyan-500/20 text-cyan-700 dark:text-cyan-300'
+              : 'bg-amber-500/20 text-amber-700 dark:text-amber-300'
           }`}
         >
           {category}

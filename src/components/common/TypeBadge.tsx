@@ -79,7 +79,7 @@ export const TypeBadge: React.FC<TypeBadgeProps> = ({
     lg: 'w-4 h-4',
   };
 
-  const commonClasses = `inline-flex items-center rounded-lg uppercase tracking-wider transition-all duration-200 shadow-sm ${
+  const commonClasses = `inline-flex items-center rounded-lg uppercase tracking-wider transition-all duration-200 shadow-sm font-bold ${
     sizeClasses[size]
   } ${
     onClick
@@ -87,29 +87,28 @@ export const TypeBadge: React.FC<TypeBadgeProps> = ({
       : 'cursor-default'
   } ${
     selected
-      ? 'ring-2 ring-amber-400 shadow-amber-500/30 scale-105'
+      ? 'ring-2 ring-amber-400 ring-offset-2 ring-offset-white dark:ring-offset-slate-900 shadow-lg scale-105'
       : ''
   } ${className}`;
 
   const styleObj = {
-    backgroundColor: details.color + '26', // 15% opacity background
+    backgroundColor: details.color,
     borderColor: details.color,
     borderWidth: '1px',
     color: '#FFFFFF',
-    textShadow: '0 1px 2px rgba(0,0,0,0.8)',
+    textShadow: '0 1px 2px rgba(0,0,0,0.5)',
   };
 
   const content = (
     <>
       <span
-        className="inline-flex items-center justify-center p-0.5 rounded"
-        style={{ backgroundColor: details.color }}
+        className="inline-flex items-center justify-center p-0.5 rounded bg-black/20 text-white"
       >
-        {showIcon && <IconComponent className={`${iconSizes[size]} text-slate-950`} strokeWidth={2.5} />}
+        {showIcon && <IconComponent className={`${iconSizes[size]} text-white`} strokeWidth={2.5} />}
       </span>
-      <span>{type}</span>
+      <span className="text-white font-bold">{type}</span>
       {showIndonesian && (
-        <span className="text-[10px] lowercase tracking-normal text-slate-300 opacity-80">
+        <span className="text-[10px] lowercase tracking-normal text-white/90 font-medium">
           ({details.nameId})
         </span>
       )}

@@ -12,13 +12,11 @@ import {
   Shield,
   Swords,
   Grid3X3,
-  HelpCircle,
   Sparkles,
-  Info,
-  RotateCcw,
-  CheckCircle2,
   XCircle,
   AlertTriangle,
+  CheckCircle2,
+  HelpCircle,
 } from 'lucide-react';
 
 export const TypeCalculator: React.FC = () => {
@@ -53,34 +51,32 @@ export const TypeCalculator: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      {/* Header Banner */}
-      <div className="relative overflow-hidden p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-950 border border-indigo-500/40 shadow-2xl shadow-indigo-950/30">
-        <div className="absolute -right-10 -bottom-10 w-48 h-48 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none"></div>
+      {/* Header Banner - Pokémon GO Vibrant Emerald Theme */}
+      <div className="relative overflow-hidden p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white shadow-md">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
           <div>
-            <div className="flex items-center gap-2 text-indigo-400 font-bold text-xs uppercase tracking-widest font-mono mb-1">
-              <span className="w-1.5 h-3.5 bg-indigo-500 rounded-sm"></span>
-              <Sparkles className="w-3.5 h-3.5" /> Pokémon GO Battle Engine
+            <div className="flex items-center gap-1.5 text-emerald-100 font-bold text-xs uppercase tracking-wider mb-1">
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" /> Pokémon GO Battle Engine
             </div>
-            <h2 className="text-xl sm:text-2xl font-black text-slate-100 tracking-tight font-mono">
+            <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white">
               Type Effectiveness Calculator
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl">
+            <p className="text-xs sm:text-sm text-emerald-50 mt-1 max-w-2xl font-medium leading-relaxed">
               Hitung kelemahan & kekebalan elemen Pokémon dengan aturan rasio damage resmi Pokémon GO:
-              <span className="text-indigo-300 font-semibold font-mono"> Super Effective (x1.6 / x2.56)</span>,
-              <span className="text-cyan-300 font-semibold font-mono"> Not Very Effective (x0.625)</span>, dan
-              <span className="text-emerald-300 font-semibold font-mono"> Immunity (x0.39 / x0.244)</span>.
+              <span className="font-bold text-amber-200"> Super Effective (x1.6 / x2.56)</span>,
+              <span className="font-bold text-cyan-200"> Not Very Effective (x0.625)</span>, dan
+              <span className="font-bold text-emerald-200"> Immunity (x0.39 / x0.244)</span>.
             </p>
           </div>
 
           {/* Mode Switcher */}
-          <div className="flex items-center p-1 bg-slate-950 rounded-xl border border-indigo-500/30 self-start md:self-auto shadow-inner">
+          <div className="flex items-center p-1 bg-black/20 backdrop-blur-sm rounded-xl border border-white/20 self-start md:self-auto shadow-inner">
             <button
               onClick={() => setMode('defending')}
-              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 mode === 'defending'
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/40'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-white text-emerald-900 shadow-sm'
+                  : 'text-white/80 hover:text-white hover:bg-white/10'
               }`}
             >
               <Shield className="w-4 h-4" />
@@ -88,10 +84,10 @@ export const TypeCalculator: React.FC = () => {
             </button>
             <button
               onClick={() => setMode('attacking')}
-              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 mode === 'attacking'
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/40'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-white text-emerald-900 shadow-sm'
+                  : 'text-white/80 hover:text-white hover:bg-white/10'
               }`}
             >
               <Swords className="w-4 h-4" />
@@ -99,10 +95,10 @@ export const TypeCalculator: React.FC = () => {
             </button>
             <button
               onClick={() => setMode('matrix')}
-              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 mode === 'matrix'
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/40'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-white text-emerald-900 shadow-sm'
+                  : 'text-white/80 hover:text-white hover:bg-white/10'
               }`}
             >
               <Grid3X3 className="w-4 h-4" />
@@ -112,36 +108,36 @@ export const TypeCalculator: React.FC = () => {
         </div>
       </div>
 
-      {/* MODE 1: DEFENDER EFFECTIVENESS (Kalkulator Kelemahan Bos / Bertahan) */}
+      {/* MODE 1: DEFENDER EFFECTIVENESS */}
       {mode === 'defending' && (
         <div className="space-y-6">
           {/* Defender Type Selector Card */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/60 backdrop-blur-md border border-slate-800 space-y-5">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+          <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
               <div>
-                <h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-indigo-400" />
+                <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   Pilih Elemen Bertahan (Defender)
                 </h3>
-                <p className="text-xs text-slate-400 mt-0.5">
+                <p className="text-xs text-slate-700 dark:text-slate-300 mt-0.5 font-medium">
                   Pilih tipe tunggal atau kombinasi dual-type untuk menghitung total multiplier kelemahan
                 </p>
               </div>
 
               {/* Active Selection Display */}
-              <div className="flex items-center gap-2 bg-slate-950 px-4 py-2 rounded-xl border border-indigo-500/30">
-                <span className="text-xs text-slate-400 font-mono">Kombinasi:</span>
+              <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700">
+                <span className="text-xs text-slate-600 dark:text-slate-300 font-semibold">Kombinasi:</span>
                 <TypeBadge type={primaryType} size="md" showIndonesian />
                 {secondaryType && secondaryType !== primaryType && (
                   <>
-                    <span className="text-slate-500">+</span>
+                    <span className="text-slate-400 font-bold">+</span>
                     <TypeBadge type={secondaryType} size="md" showIndonesian />
                   </>
                 )}
                 {secondaryType && (
                   <button
                     onClick={() => setSecondaryType(null)}
-                    className="ml-2 text-slate-400 hover:text-rose-400 text-xs cursor-pointer"
+                    className="ml-1 text-slate-400 hover:text-rose-600 text-xs cursor-pointer p-1"
                     title="Hapus tipe kedua"
                   >
                     <XCircle className="w-4 h-4" />
@@ -152,35 +148,38 @@ export const TypeCalculator: React.FC = () => {
 
             {/* Quick Presets */}
             <div>
-              <div className="text-xs font-semibold text-slate-400 mb-2 flex items-center gap-1.5 font-mono uppercase tracking-wider">
-                <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+              <div className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5 uppercase tracking-wider">
+                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
                 Contoh Cepat Kombinasi Populer:
               </div>
               <div className="flex flex-wrap gap-2">
-                {presets.map((p) => (
-                  <button
-                    key={p.name}
-                    onClick={() => {
-                      setPrimaryType(p.t1);
-                      setSecondaryType(p.t2);
-                    }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all cursor-pointer font-mono ${
-                      primaryType === p.t1 && secondaryType === p.t2
-                        ? 'bg-indigo-500/20 border-indigo-500 text-indigo-300 font-bold shadow-md shadow-indigo-500/20'
-                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-white'
-                    }`}
-                  >
-                    {p.name}
-                  </button>
-                ))}
+                {presets.map((p) => {
+                  const isSelected = primaryType === p.t1 && secondaryType === p.t2;
+                  return (
+                    <button
+                      key={p.name}
+                      onClick={() => {
+                        setPrimaryType(p.t1);
+                        setSecondaryType(p.t2);
+                      }}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                        isSelected
+                          ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-500 text-emerald-800 dark:text-emerald-300 font-bold shadow-xs'
+                          : 'bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                      }`}
+                    >
+                      {p.name}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
             {/* Type 1 Selector */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between font-mono">
+              <label className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center justify-between">
                 <span>Tipe Utama (Primary Type):</span>
-                <span className="text-indigo-400 font-bold">{primaryType}</span>
+                <span className="text-emerald-700 dark:text-emerald-400 font-black">{primaryType}</span>
               </label>
               <div className="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-9 gap-2">
                 {POKEMON_TYPES.map((t) => (
@@ -199,19 +198,21 @@ export const TypeCalculator: React.FC = () => {
             </div>
 
             {/* Type 2 Selector */}
-            <div className="space-y-2 pt-2 border-t border-slate-800/60">
-              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between font-mono">
+            <div className="space-y-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+              <label className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center justify-between">
                 <span>Tipe Kedua (Secondary Type - Opsional):</span>
-                <span className="text-cyan-400 font-bold">{secondaryType || 'Tidak ada (Tipe Tunggal)'}</span>
+                <span className="text-teal-700 dark:text-teal-400 font-black">
+                  {secondaryType || 'Tidak ada (Tipe Tunggal)'}
+                </span>
               </label>
               <div className="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-9 gap-2">
                 <button
                   type="button"
                   onClick={() => setSecondaryType(null)}
-                  className={`px-2 py-1.5 rounded-lg text-xs font-bold border transition cursor-pointer font-mono ${
+                  className={`px-2 py-1.5 rounded-lg text-xs font-bold border transition cursor-pointer ${
                     secondaryType === null
-                      ? 'bg-indigo-950 border-indigo-400 text-indigo-300'
-                      : 'bg-slate-950 border-slate-800 text-slate-500 hover:text-slate-300'
+                      ? 'bg-emerald-100 dark:bg-emerald-950/60 border-emerald-500 text-emerald-800 dark:text-emerald-300'
+                      : 'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                   }`}
                 >
                   Tanpa Tipe 2
@@ -237,49 +238,47 @@ export const TypeCalculator: React.FC = () => {
 
           {/* Damage Multiplier Breakdown Grid */}
           <div className="space-y-4">
-            <h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-amber-400" />
+            <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-amber-500" />
               Hasil Efektivitas Kerusakan (Damage Multipliers)
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Double Super Effective (2.56x) */}
               {defenderResults.doubleWeakness.length > 0 && (
-                <div className="p-4 rounded-xl border border-rose-600/60 bg-gradient-to-br from-rose-950/40 to-slate-900 space-y-3 shadow-lg shadow-rose-950/30 md:col-span-2">
+                <div className="p-4 rounded-2xl border-2 border-rose-400 dark:border-rose-700 bg-rose-50/80 dark:bg-rose-950/40 space-y-3 shadow-sm md:col-span-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded text-xs font-black bg-rose-600 text-white uppercase animate-pulse">
+                      <span className="px-2.5 py-0.5 rounded-md text-xs font-black bg-rose-600 text-white uppercase tracking-wider animate-pulse shadow-xs">
                         FATAL WEAKNESS (2.56x)
                       </span>
-                      <span className="text-sm font-bold text-rose-300">
+                      <span className="text-sm font-bold text-rose-950 dark:text-rose-200">
                         Double Super Effective
                       </span>
                     </div>
-                    <span className="text-xs text-rose-300 font-mono">256% Damage</span>
+                    <span className="text-xs text-rose-800 dark:text-rose-300 font-mono font-bold">256% Damage</span>
                   </div>
-                  <p className="text-xs text-slate-300">
+                  <p className="text-xs text-rose-950 dark:text-rose-200 font-medium">
                     Kombinasi elemen bertahan ini mengalami kelemahan ganda terhadap serangan tipe berikut:
                   </p>
                   <div className="flex flex-wrap gap-2 pt-1">
                     {defenderResults.doubleWeakness.map((res) => (
-                      <div key={res.attackType} className="flex items-center gap-1.5">
-                        <TypeBadge type={res.attackType} size="md" showIndonesian />
-                      </div>
+                      <TypeBadge key={res.attackType} type={res.attackType} size="md" showIndonesian />
                     ))}
                   </div>
                 </div>
               )}
 
               {/* Single Weakness (1.6x) */}
-              <div className="p-4 rounded-xl border border-orange-500/40 bg-gradient-to-br from-orange-950/20 to-slate-900 space-y-3">
+              <div className="p-4 rounded-2xl border border-orange-300 dark:border-orange-800/60 bg-orange-50/60 dark:bg-orange-950/30 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded text-xs font-bold bg-orange-600 text-white uppercase">
+                    <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-orange-600 text-white uppercase tracking-wider">
                       WEAKNESS (1.6x)
                     </span>
-                    <span className="text-sm font-bold text-orange-300">Super Effective</span>
+                    <span className="text-sm font-bold text-orange-950 dark:text-orange-200">Super Effective</span>
                   </div>
-                  <span className="text-xs text-orange-300 font-mono">160% Damage</span>
+                  <span className="text-xs text-orange-800 dark:text-orange-300 font-mono font-bold">160% Damage</span>
                 </div>
                 <div className="flex flex-wrap gap-2 min-h-[36px]">
                   {defenderResults.weakness.length > 0 ? (
@@ -293,15 +292,15 @@ export const TypeCalculator: React.FC = () => {
               </div>
 
               {/* Resistance (0.625x) */}
-              <div className="p-4 rounded-xl border border-cyan-700/40 bg-gradient-to-br from-cyan-950/20 to-slate-900 space-y-3">
+              <div className="p-4 rounded-2xl border border-cyan-300 dark:border-cyan-800/60 bg-cyan-50/60 dark:bg-cyan-950/30 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded text-xs font-bold bg-cyan-700 text-white uppercase">
+                    <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-cyan-700 text-white uppercase tracking-wider">
                       RESIST (0.625x)
                     </span>
-                    <span className="text-sm font-bold text-cyan-300">Not Very Effective</span>
+                    <span className="text-sm font-bold text-cyan-950 dark:text-cyan-200">Not Very Effective</span>
                   </div>
-                  <span className="text-xs text-cyan-300 font-mono">62.5% Damage</span>
+                  <span className="text-xs text-cyan-800 dark:text-cyan-300 font-mono font-bold">62.5% Damage</span>
                 </div>
                 <div className="flex flex-wrap gap-2 min-h-[36px]">
                   {defenderResults.resistance.length > 0 ? (
@@ -315,15 +314,15 @@ export const TypeCalculator: React.FC = () => {
               </div>
 
               {/* Immunity / Double Resist (0.39x) */}
-              <div className="p-4 rounded-xl border border-teal-600/40 bg-gradient-to-br from-teal-950/20 to-slate-900 space-y-3">
+              <div className="p-4 rounded-2xl border border-teal-300 dark:border-teal-800/60 bg-teal-50/60 dark:bg-teal-950/30 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded text-xs font-bold bg-teal-600 text-white uppercase">
+                    <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-teal-600 text-white uppercase tracking-wider">
                       IMMUNITY / 2x RESIST (0.39x)
                     </span>
-                    <span className="text-sm font-bold text-teal-300">Kekebalan PoGO</span>
+                    <span className="text-sm font-bold text-teal-950 dark:text-teal-200">Kekebalan PoGO</span>
                   </div>
-                  <span className="text-xs text-teal-300 font-mono">39.0% Damage</span>
+                  <span className="text-xs text-teal-800 dark:text-teal-300 font-mono font-bold">39.0% Damage</span>
                 </div>
                 <div className="flex flex-wrap gap-2 min-h-[36px]">
                   {defenderResults.immunity.length > 0 ? (
@@ -338,15 +337,15 @@ export const TypeCalculator: React.FC = () => {
 
               {/* Triple Resistance (0.244x) */}
               {defenderResults.tripleResistance.length > 0 && (
-                <div className="p-4 rounded-xl border border-emerald-500/50 bg-gradient-to-br from-emerald-950/30 to-slate-900 space-y-3">
+                <div className="p-4 rounded-2xl border border-emerald-300 dark:border-emerald-700 bg-emerald-50/70 dark:bg-emerald-950/40 space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded text-xs font-bold bg-emerald-600 text-white uppercase">
+                      <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-emerald-600 text-white uppercase tracking-wider">
                         TRIPLE RESIST (0.244x)
                       </span>
-                      <span className="text-sm font-bold text-emerald-300">Kekebalan Maksimal</span>
+                      <span className="text-sm font-bold text-emerald-950 dark:text-emerald-200">Kekebalan Maksimal</span>
                     </div>
-                    <span className="text-xs text-emerald-300 font-mono">24.4% Damage</span>
+                    <span className="text-xs text-emerald-800 dark:text-emerald-300 font-mono font-bold">24.4% Damage</span>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {defenderResults.tripleResistance.map((res) => (
@@ -357,15 +356,15 @@ export const TypeCalculator: React.FC = () => {
               )}
 
               {/* Neutral Damage (1.0x) */}
-              <div className="p-4 rounded-xl border border-slate-800 bg-slate-900/60 space-y-3">
+              <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded text-xs font-bold bg-slate-700 text-white uppercase">
+                    <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-slate-600 text-white uppercase tracking-wider">
                       NEUTRAL (1.0x)
                     </span>
-                    <span className="text-sm font-bold text-slate-300">Damage Normal</span>
+                    <span className="text-sm font-bold text-slate-800 dark:text-slate-300">Damage Normal</span>
                   </div>
-                  <span className="text-xs text-slate-400 font-mono">100% Damage</span>
+                  <span className="text-xs text-slate-600 dark:text-slate-400 font-mono font-bold">100% Damage</span>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {defenderResults.neutral.map((res) => (
@@ -378,23 +377,23 @@ export const TypeCalculator: React.FC = () => {
         </div>
       )}
 
-      {/* MODE 2: ATTACKER EFFECTIVENESS (Menyerang) */}
+      {/* MODE 2: ATTACKER EFFECTIVENESS */}
       {mode === 'attacking' && (
         <div className="space-y-6">
           {/* Attacker Type Selector Card */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-5">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+          <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
               <div>
-                <h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
-                  <Swords className="w-4 h-4 text-amber-400" />
+                <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <Swords className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   Pilih Elemen Serangan (Attacker Move Type)
                 </h3>
-                <p className="text-xs text-slate-400 mt-0.5">
+                <p className="text-xs text-slate-700 dark:text-slate-300 mt-0.5 font-medium">
                   Cari tahu tipe elemen target mana yang akan menerima damage maksimal dari jurus ini
                 </p>
               </div>
-              <div className="flex items-center gap-2 bg-slate-950 px-4 py-2 rounded-xl border border-slate-800">
-                <span className="text-xs text-slate-400">Jurus Dipilih:</span>
+              <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700">
+                <span className="text-xs text-slate-600 dark:text-slate-300 font-semibold">Jurus Dipilih:</span>
                 <TypeBadge type={attackingType} size="md" showIndonesian />
               </div>
             </div>
@@ -415,17 +414,17 @@ export const TypeCalculator: React.FC = () => {
           {/* Attacker Results */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Super Effective Against */}
-            <div className="p-5 rounded-2xl border border-emerald-500/50 bg-gradient-to-br from-emerald-950/20 to-slate-900 space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-emerald-500/20">
+            <div className="p-5 rounded-2xl border border-emerald-300 dark:border-emerald-700 bg-emerald-50/70 dark:bg-emerald-950/40 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-emerald-200 dark:border-emerald-800">
                 <div>
-                  <span className="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-600 text-white uppercase">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-600 text-white uppercase tracking-wider">
                     DAMAGE 1.6x (160%)
                   </span>
-                  <h4 className="text-base font-bold text-emerald-300 mt-1">Super Effective</h4>
+                  <h4 className="text-base font-bold text-emerald-950 dark:text-emerald-200 mt-1">Super Effective</h4>
                 </div>
-                <CheckCircle2 className="w-6 h-6 text-emerald-400" />
+                <CheckCircle2 className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
               </div>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-emerald-950 dark:text-emerald-200 font-medium">
                 Sangat kuat saat menyerang Pokémon dengan tipe bertahan berikut:
               </p>
               <div className="flex flex-wrap gap-2">
@@ -440,17 +439,17 @@ export const TypeCalculator: React.FC = () => {
             </div>
 
             {/* Not Very Effective Against */}
-            <div className="p-5 rounded-2xl border border-rose-500/40 bg-gradient-to-br from-rose-950/20 to-slate-900 space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-rose-500/20">
+            <div className="p-5 rounded-2xl border border-rose-300 dark:border-rose-800 bg-rose-50/70 dark:bg-rose-950/40 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-rose-200 dark:border-rose-800">
                 <div>
-                  <span className="px-2 py-0.5 rounded text-[10px] font-black bg-rose-700 text-white uppercase">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-black bg-rose-600 text-white uppercase tracking-wider">
                     DAMAGE 0.625x (62.5%)
                   </span>
-                  <h4 className="text-base font-bold text-rose-300 mt-1">Not Very Effective</h4>
+                  <h4 className="text-base font-bold text-rose-950 dark:text-rose-200 mt-1">Not Very Effective</h4>
                 </div>
-                <AlertTriangle className="w-6 h-6 text-rose-400" />
+                <AlertTriangle className="w-6 h-6 text-rose-600 dark:text-rose-400" />
               </div>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-rose-950 dark:text-rose-200 font-medium">
                 Damage berkurang signifikan jika mengenai tipe bertahan berikut:
               </p>
               <div className="flex flex-wrap gap-2">
@@ -464,18 +463,18 @@ export const TypeCalculator: React.FC = () => {
               </div>
             </div>
 
-            {/* Immunity / Reduced Damage Against */}
-            <div className="p-5 rounded-2xl border border-slate-700 bg-slate-900 space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+            {/* Immunity Against */}
+            <div className="p-5 rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-100/80 dark:bg-slate-900 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
                 <div>
-                  <span className="px-2 py-0.5 rounded text-[10px] font-black bg-slate-700 text-white uppercase">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-black bg-slate-700 text-white uppercase tracking-wider">
                     DAMAGE 0.39x (39.0%)
                   </span>
-                  <h4 className="text-base font-bold text-slate-300 mt-1">Immunity in PoGO</h4>
+                  <h4 className="text-base font-bold text-slate-900 dark:text-slate-200 mt-1">Immunity in PoGO</h4>
                 </div>
-                <XCircle className="w-6 h-6 text-slate-400" />
+                <XCircle className="w-6 h-6 text-slate-500" />
               </div>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">
                 Damage ditekan drastis akibat kekebalan mekanik Pokémon GO:
               </p>
               <div className="flex flex-wrap gap-2">
@@ -494,43 +493,43 @@ export const TypeCalculator: React.FC = () => {
 
       {/* MODE 3: 18x18 TYPE MATCHUP MATRIX */}
       {mode === 'matrix' && (
-        <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-4 overflow-hidden">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
+        <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4 overflow-hidden">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
             <div>
-              <h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
-                <Grid3X3 className="w-4 h-4 text-amber-400" />
+              <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Grid3X3 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 Matriks Interaktif 18x18 Elemen Pokémon GO
               </h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
                 Baris = Tipe Serangan (Attacker) | Kolom = Tipe Bertahan (Defender)
               </p>
             </div>
 
             {/* Matrix Legend */}
-            <div className="flex flex-wrap items-center gap-2 text-[10px] font-mono">
-              <span className="px-1.5 py-0.5 rounded bg-emerald-600 text-white font-bold">1.6x (SE)</span>
-              <span className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">1.0x</span>
-              <span className="px-1.5 py-0.5 rounded bg-amber-900 text-amber-200">0.625x (NVE)</span>
-              <span className="px-1.5 py-0.5 rounded bg-rose-950 border border-rose-600 text-rose-300">0.39x (IMM)</span>
+            <div className="flex flex-wrap items-center gap-1.5 text-[10px] font-mono font-bold">
+              <span className="px-2 py-0.5 rounded bg-emerald-600 text-white">1.6x (SE)</span>
+              <span className="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200">1.0x</span>
+              <span className="px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-800">0.625x (NVE)</span>
+              <span className="px-2 py-0.5 rounded bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-300 border border-rose-300 dark:border-rose-800">0.39x (IMM)</span>
             </div>
           </div>
 
           {/* Cell Hover Info Bar */}
           {hoveredMatrixCell && (
-            <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between text-xs animate-in fade-in">
+            <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between text-xs animate-in fade-in">
               <div className="flex items-center gap-2">
-                <span className="text-slate-400">Serangan:</span>
+                <span className="text-slate-600 dark:text-slate-400 font-medium">Serangan:</span>
                 <TypeBadge type={hoveredMatrixCell.atk} size="xs" />
-                <span className="text-slate-400">vs Bertahan:</span>
+                <span className="text-slate-600 dark:text-slate-400 font-medium">vs Bertahan:</span>
                 <TypeBadge type={hoveredMatrixCell.def} size="xs" />
               </div>
               <div className="font-mono font-bold">
                 {(() => {
                   const m = getDualTypeMultiplier(hoveredMatrixCell.atk, hoveredMatrixCell.def);
-                  if (m >= 1.5) return <span className="text-emerald-400">💥 1.6x Super Effective</span>;
-                  if (m <= 0.4) return <span className="text-rose-400">⛔ 0.39x Immunity</span>;
-                  if (m <= 0.65) return <span className="text-amber-400">🛡️ 0.625x Not Very Effective</span>;
-                  return <span className="text-slate-300">⚔️ 1.0x Normal Damage</span>;
+                  if (m >= 1.5) return <span className="text-emerald-700 dark:text-emerald-400">💥 1.6x Super Effective</span>;
+                  if (m <= 0.4) return <span className="text-rose-700 dark:text-rose-400">⛔ 0.39x Immunity</span>;
+                  if (m <= 0.65) return <span className="text-amber-700 dark:text-amber-400">🛡️ 0.625x Not Very Effective</span>;
+                  return <span className="text-slate-700 dark:text-slate-300">⚔️ 1.0x Normal Damage</span>;
                 })()}
               </div>
             </div>
@@ -541,13 +540,13 @@ export const TypeCalculator: React.FC = () => {
             <table className="w-full text-center border-collapse text-[11px]">
               <thead>
                 <tr>
-                  <th className="p-2 sticky left-0 z-20 bg-slate-950 border-b border-r border-slate-800 font-bold text-slate-400 text-left min-w-[90px]">
+                  <th className="p-2 sticky left-0 z-20 bg-slate-100 dark:bg-slate-950 border-b border-r border-slate-200 dark:border-slate-800 font-bold text-slate-700 dark:text-slate-300 text-left min-w-[90px]">
                     ATK \ DEF
                   </th>
                   {POKEMON_TYPES.map((defType) => (
                     <th
                       key={`head-${defType}`}
-                      className="p-1.5 border-b border-slate-800 min-w-[42px] max-w-[42px]"
+                      className="p-1.5 border-b border-slate-200 dark:border-slate-800 min-w-[42px] max-w-[42px]"
                       title={defType}
                     >
                       <div className="w-full flex justify-center">
@@ -559,23 +558,23 @@ export const TypeCalculator: React.FC = () => {
               </thead>
               <tbody>
                 {POKEMON_TYPES.map((atkType) => (
-                  <tr key={`row-${atkType}`} className="hover:bg-slate-800/30">
-                    <td className="p-1.5 sticky left-0 z-10 bg-slate-950 border-r border-b border-slate-800 text-left">
+                  <tr key={`row-${atkType}`} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                    <td className="p-1.5 sticky left-0 z-10 bg-slate-100 dark:bg-slate-950 border-r border-b border-slate-200 dark:border-slate-800 text-left">
                       <TypeBadge type={atkType} size="xs" showIcon={false} className="w-full justify-start text-[10px]" />
                     </td>
                     {POKEMON_TYPES.map((defType) => {
                       const mult = getDualTypeMultiplier(atkType, defType);
-                      let cellClass = 'bg-slate-900/40 text-slate-500';
+                      let cellClass = 'bg-slate-50/50 dark:bg-slate-900/40 text-slate-600 dark:text-slate-400';
                       let displayStr = '-';
 
                       if (mult >= 1.5) {
-                        cellClass = 'bg-emerald-950/80 text-emerald-300 font-bold border border-emerald-800/40';
+                        cellClass = 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-900 dark:text-emerald-300 font-bold border border-emerald-300 dark:border-emerald-800/40';
                         displayStr = '1.6';
                       } else if (mult <= 0.4) {
-                        cellClass = 'bg-rose-950/80 text-rose-300 font-bold border border-rose-800/50';
+                        cellClass = 'bg-rose-100 dark:bg-rose-950/80 text-rose-900 dark:text-rose-300 font-bold border border-rose-300 dark:border-rose-800/50';
                         displayStr = '0.39';
                       } else if (mult <= 0.65) {
-                        cellClass = 'bg-amber-950/40 text-amber-400 font-medium';
+                        cellClass = 'bg-amber-100/70 dark:bg-amber-950/40 text-amber-900 dark:text-amber-400 font-medium';
                         displayStr = '0.62';
                       }
 
@@ -584,7 +583,7 @@ export const TypeCalculator: React.FC = () => {
                           key={`cell-${atkType}-${defType}`}
                           onMouseEnter={() => setHoveredMatrixCell({ atk: atkType, def: defType })}
                           onMouseLeave={() => setHoveredMatrixCell(null)}
-                          className={`p-1.5 border border-slate-800/60 font-mono transition-colors cursor-pointer hover:ring-1 hover:ring-amber-400 ${cellClass}`}
+                          className={`p-1.5 border border-slate-200 dark:border-slate-800/60 font-mono transition-colors cursor-pointer hover:ring-1 hover:ring-emerald-500 ${cellClass}`}
                         >
                           {displayStr}
                         </td>

@@ -83,7 +83,7 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-100 flex flex-col font-sans selection:bg-emerald-500 selection:text-white relative overflow-x-hidden transition-colors">
+    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-[#0f172a] dark:text-slate-100 flex flex-col font-sans selection:bg-emerald-500 selection:text-white relative overflow-x-hidden transition-colors">
       {/* High Quality Splash Screen Component */}
       {(showSplash || isManualSplashPreview) && (
         <SplashScreen
@@ -96,9 +96,9 @@ export default function App() {
       )}
 
       {/* Ambient Glows */}
-      <div className="fixed top-0 left-1/4 w-[500px] h-[500px] bg-emerald-500/5 dark:bg-emerald-600/10 rounded-full blur-[160px] pointer-events-none -z-10"></div>
-      <div className="fixed top-1/3 right-1/4 w-[400px] h-[400px] bg-teal-500/5 dark:bg-teal-600/10 rounded-full blur-[150px] pointer-events-none -z-10"></div>
-      <div className="fixed bottom-10 left-1/3 w-[500px] h-[500px] bg-sky-500/5 dark:bg-cyan-600/10 rounded-full blur-[160px] pointer-events-none -z-10"></div>
+      <div className="fixed top-0 left-1/4 w-[500px] h-[500px] bg-emerald-500/8 dark:bg-emerald-600/12 rounded-full blur-[160px] pointer-events-none -z-10"></div>
+      <div className="fixed top-1/3 right-1/4 w-[400px] h-[400px] bg-teal-500/8 dark:bg-teal-600/12 rounded-full blur-[150px] pointer-events-none -z-10"></div>
+      <div className="fixed bottom-10 left-1/3 w-[500px] h-[500px] bg-emerald-500/5 dark:bg-cyan-600/10 rounded-full blur-[160px] pointer-events-none -z-10"></div>
 
       {/* Top Navigation Bar with Pokémon GO Theme */}
       <Navbar

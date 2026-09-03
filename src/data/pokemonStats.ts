@@ -76,6 +76,7 @@ export const KNOWN_POKEMON_STATS: Record<number, PokemonBaseStats> = {
   392: { attack: 252, defense: 143, stamina: 183, maxCp: 3183 }, // Infernape
   395: { attack: 210, defense: 186, stamina: 197, maxCp: 3279 }, // Empoleon
   398: { attack: 234, defense: 140, stamina: 198, maxCp: 3204 }, // Staraptor
+  405: { attack: 232, defense: 156, stamina: 190, maxCp: 3265 }, // Luxray
   407: { attack: 243, defense: 185, stamina: 155, maxCp: 3359 }, // Roserade
   409: { attack: 295, defense: 109, stamina: 219, maxCp: 3728 }, // Rampardos
   411: { attack: 135, defense: 275, stamina: 155, maxCp: 2482 }, // Bastiodon
@@ -154,6 +155,7 @@ export const KNOWN_POKEMON_STATS: Record<number, PokemonBaseStats> = {
   798: { attack: 323, defense: 182, stamina: 139, maxCp: 4156 }, // Kartana
   799: { attack: 211, defense: 211, stamina: 440, maxCp: 4337 }, // Guzzlord
   800: { attack: 251, defense: 195, stamina: 219, maxCp: 4337 }, // Necrozma
+  807: { attack: 267, defense: 198, stamina: 204, maxCp: 4225 }, // Zeraora
 
   // Gen 8
   887: { attack: 262, defense: 157, stamina: 204, maxCp: 3770 }, // Dragapult
@@ -162,11 +164,19 @@ export const KNOWN_POKEMON_STATS: Record<number, PokemonBaseStats> = {
   890: { attack: 278, defense: 241, stamina: 267, maxCp: 5046 }, // Eternatus
   892: { attack: 244, defense: 174, stamina: 225, maxCp: 3704 }, // Urshifu
   893: { attack: 242, defense: 215, stamina: 233, maxCp: 4334 }, // Zarude
+  894: { attack: 275, defense: 170, stamina: 190, maxCp: 4220 }, // Regieleki
 
   // Gen 9
+  923: { attack: 247, defense: 143, stamina: 172, maxCp: 3183 }, // Pawmot
+  939: { attack: 195, defense: 182, stamina: 240, maxCp: 3244 }, // Bellibolt
+  941: { attack: 228, defense: 135, stamina: 172, maxCp: 2824 }, // Kilowattrel
+  989: { attack: 238, defense: 184, stamina: 198, maxCp: 3670 }, // Sandy Shocks
+  992: { attack: 242, defense: 190, stamina: 308, maxCp: 4325 }, // Iron Hands
+  995: { attack: 247, defense: 216, stamina: 225, maxCp: 4329 }, // Iron Thorns
   998: { attack: 254, defense: 168, stamina: 229, maxCp: 4048 }, // Baxcalibur
   1007: { attack: 274, defense: 222, stamina: 207, maxCp: 4725 }, // Koraidon
   1008: { attack: 274, defense: 222, stamina: 207, maxCp: 4725 }, // Miraidon
+  1021: { attack: 262, defense: 189, stamina: 251, maxCp: 4425 }, // Raging Bolt
   1027: { attack: 310, defense: 183, stamina: 245, maxCp: 5206 }, // Kyurem (Black)
   1028: { attack: 310, defense: 183, stamina: 245, maxCp: 5206 }, // Kyurem (White)
 };
@@ -195,20 +205,16 @@ export function getPokemonBaseStats(
 
   // Algorithmic generator for any species
   const seed = (dex * 9301 + 49297) % 233280;
-  const variance = (seed / 233280) * 50;
+  const variance = (seed / 233280) * 35;
 
-  let baseAtk = 180 + variance;
-  let baseDef = 160 + (seed % 40);
-  let baseSta = 180 + (seed % 50);
+  let baseAtk = 170 + variance;
+  let baseDef = 150 + (seed % 35);
+  let baseSta = 160 + (seed % 35);
 
   if (isLegendary || isMythical) {
-    baseAtk += 65;
+    baseAtk += 75;
     baseDef += 45;
     baseSta += 35;
-  } else if (dex > 150) {
-    baseAtk += 25;
-    baseDef += 20;
-    baseSta += 15;
   }
 
   if (isMega || (name && name.toLowerCase().includes('mega'))) {

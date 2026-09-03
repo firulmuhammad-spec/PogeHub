@@ -8,6 +8,7 @@ import {
   getDualTypeMultiplier,
 } from '../../data/pokemonTypes';
 import { TypeBadge } from '../common/TypeBadge';
+import { TypePokemonModal } from './TypePokemonModal';
 import {
   Shield,
   Swords,
@@ -24,6 +25,7 @@ export const TypeCalculator: React.FC = () => {
   const [primaryType, setPrimaryType] = useState<PokemonType>('Dragon');
   const [secondaryType, setSecondaryType] = useState<PokemonType | null>('Flying');
   const [attackingType, setAttackingType] = useState<PokemonType>('Fire');
+  const [selectedTypeModal, setSelectedTypeModal] = useState<PokemonType | null>(null);
   const [hoveredMatrixCell, setHoveredMatrixCell] = useState<{
     atk: PokemonType;
     def: PokemonType;
@@ -238,10 +240,51 @@ export const TypeCalculator: React.FC = () => {
 
           {/* Damage Multiplier Breakdown Grid */}
           <div className="space-y-4">
-            <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-amber-500" />
-              Hasil Efektivitas Kerusakan (Damage Multipliers)
-            </h3>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-amber-500" />
+                Hasil Efektivitas Kerusakan (Damage Multipliers)
+              </h3>
+              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                👆 Klik tipe untuk cek rekomendasi Pokémon & evolusinya
+              </span>
+            </div>
+
+            {/* Interactive Feature Tip Callout */}
+            <div className="p-3 sm:p-3.5 rounded-xl bg-emerald-50/90 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-950 dark:text-emerald-100 flex items-start gap-2.5 shadow-xs">
+              <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
+              <div className="text-xs leading-relaxed">
+                <strong className="font-black text-emerald-700 dark:text-emerald-300 mr-1">
+                  💡 Tips Pemain:
+                </strong>
+                Anda dapat <strong>mengklik tombol tipe elemen</strong> apa saja di bawah (misal:{' '}
+                <button
+                  type="button"
+                  onClick={() => setSelectedTypeModal('Electric')}
+                  className="font-black underline text-emerald-800 dark:text-emerald-300 hover:text-emerald-600 cursor-pointer"
+                >
+                  Electric
+                </button>
+                ,{' '}
+                <button
+                  type="button"
+                  onClick={() => setSelectedTypeModal('Ice')}
+                  className="font-black underline text-emerald-800 dark:text-emerald-300 hover:text-emerald-600 cursor-pointer"
+                >
+                  Ice
+                </button>
+                ,{' '}
+                <button
+                  type="button"
+                  onClick={() => setSelectedTypeModal('Rock')}
+                  className="font-black underline text-emerald-800 dark:text-emerald-300 hover:text-emerald-600 cursor-pointer"
+                >
+                  Rock
+                </button>
+                ) untuk langsung melihat <strong>daftar Pokémon terkuat</strong> tipe tersebut beserta
+                ringkasan seluruh garis evolusinya (misal: <em>Magnemite ➔ Magneton ➔ Magnezone</em>).
+              </div>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Double Super Effective (2.56x) */}
@@ -259,11 +302,18 @@ export const TypeCalculator: React.FC = () => {
                     <span className="text-xs text-rose-800 dark:text-rose-300 font-mono font-bold">256% Damage</span>
                   </div>
                   <p className="text-xs text-rose-950 dark:text-rose-200 font-medium">
-                    Kombinasi elemen bertahan ini mengalami kelemahan ganda terhadap serangan tipe berikut:
+                    Kombinasi elemen bertahan ini mengalami kelemahan ganda terhadap serangan tipe berikut (klik tipe untuk melihat Pokémon terbaik):
                   </p>
                   <div className="flex flex-wrap gap-2 pt-1">
                     {defenderResults.doubleWeakness.map((res) => (
-                      <TypeBadge key={res.attackType} type={res.attackType} size="md" showIndonesian />
+                      <TypeBadge
+                        key={res.attackType}
+                        type={res.attackType}
+                        size="md"
+                        showIndonesian
+                        onClick={() => setSelectedTypeModal(res.attackType)}
+                        className="hover:ring-2 hover:ring-rose-400"
+                      />
                     ))}
                   </div>
                 </div>
@@ -283,7 +333,14 @@ export const TypeCalculator: React.FC = () => {
                 <div className="flex flex-wrap gap-2 min-h-[36px]">
                   {defenderResults.weakness.length > 0 ? (
                     defenderResults.weakness.map((res) => (
-                      <TypeBadge key={res.attackType} type={res.attackType} size="sm" showIndonesian />
+                      <TypeBadge
+                        key={res.attackType}
+                        type={res.attackType}
+                        size="sm"
+                        showIndonesian
+                        onClick={() => setSelectedTypeModal(res.attackType)}
+                        className="hover:ring-2 hover:ring-orange-400"
+                      />
                     ))
                   ) : (
                     <span className="text-xs text-slate-500 italic">Tidak ada kelemahan single 1.6x</span>
@@ -305,7 +362,14 @@ export const TypeCalculator: React.FC = () => {
                 <div className="flex flex-wrap gap-2 min-h-[36px]">
                   {defenderResults.resistance.length > 0 ? (
                     defenderResults.resistance.map((res) => (
-                      <TypeBadge key={res.attackType} type={res.attackType} size="sm" showIndonesian />
+                      <TypeBadge
+                        key={res.attackType}
+                        type={res.attackType}
+                        size="sm"
+                        showIndonesian
+                        onClick={() => setSelectedTypeModal(res.attackType)}
+                        className="hover:ring-2 hover:ring-cyan-400"
+                      />
                     ))
                   ) : (
                     <span className="text-xs text-slate-500 italic">Tidak ada resistensi tunggal</span>
@@ -327,7 +391,14 @@ export const TypeCalculator: React.FC = () => {
                 <div className="flex flex-wrap gap-2 min-h-[36px]">
                   {defenderResults.immunity.length > 0 ? (
                     defenderResults.immunity.map((res) => (
-                      <TypeBadge key={res.attackType} type={res.attackType} size="sm" showIndonesian />
+                      <TypeBadge
+                        key={res.attackType}
+                        type={res.attackType}
+                        size="sm"
+                        showIndonesian
+                        onClick={() => setSelectedTypeModal(res.attackType)}
+                        className="hover:ring-2 hover:ring-teal-400"
+                      />
                     ))
                   ) : (
                     <span className="text-xs text-slate-500 italic">Tidak ada kekebalan (0.39x)</span>
@@ -349,7 +420,14 @@ export const TypeCalculator: React.FC = () => {
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {defenderResults.tripleResistance.map((res) => (
-                      <TypeBadge key={res.attackType} type={res.attackType} size="sm" showIndonesian />
+                      <TypeBadge
+                        key={res.attackType}
+                        type={res.attackType}
+                        size="sm"
+                        showIndonesian
+                        onClick={() => setSelectedTypeModal(res.attackType)}
+                        className="hover:ring-2 hover:ring-emerald-400"
+                      />
                     ))}
                   </div>
                 </div>
@@ -368,7 +446,13 @@ export const TypeCalculator: React.FC = () => {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {defenderResults.neutral.map((res) => (
-                    <TypeBadge key={res.attackType} type={res.attackType} size="xs" />
+                    <TypeBadge
+                      key={res.attackType}
+                      type={res.attackType}
+                      size="xs"
+                      onClick={() => setSelectedTypeModal(res.attackType)}
+                      className="hover:ring-1 hover:ring-slate-400"
+                    />
                   ))}
                 </div>
               </div>
@@ -425,12 +509,19 @@ export const TypeCalculator: React.FC = () => {
                 <CheckCircle2 className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
               </div>
               <p className="text-xs text-emerald-950 dark:text-emerald-200 font-medium">
-                Sangat kuat saat menyerang Pokémon dengan tipe bertahan berikut:
+                Sangat kuat saat menyerang Pokémon dengan tipe bertahan berikut (klik tipe untuk melihat Pokémon terbaik):
               </p>
               <div className="flex flex-wrap gap-2">
                 {attackerResults.superEffective.length > 0 ? (
                   attackerResults.superEffective.map((t) => (
-                    <TypeBadge key={t} type={t} size="md" showIndonesian />
+                    <TypeBadge
+                      key={t}
+                      type={t}
+                      size="md"
+                      showIndonesian
+                      onClick={() => setSelectedTypeModal(t)}
+                      className="hover:ring-2 hover:ring-emerald-400"
+                    />
                   ))
                 ) : (
                   <span className="text-xs text-slate-500 italic">Tidak ada target Super Effective</span>
@@ -450,12 +541,19 @@ export const TypeCalculator: React.FC = () => {
                 <AlertTriangle className="w-6 h-6 text-rose-600 dark:text-rose-400" />
               </div>
               <p className="text-xs text-rose-950 dark:text-rose-200 font-medium">
-                Damage berkurang signifikan jika mengenai tipe bertahan berikut:
+                Damage berkurang signifikan jika mengenai tipe bertahan berikut (klik tipe untuk melihat Pokémon terbaik):
               </p>
               <div className="flex flex-wrap gap-2">
                 {attackerResults.notVeryEffective.length > 0 ? (
                   attackerResults.notVeryEffective.map((t) => (
-                    <TypeBadge key={t} type={t} size="sm" showIndonesian />
+                    <TypeBadge
+                      key={t}
+                      type={t}
+                      size="sm"
+                      showIndonesian
+                      onClick={() => setSelectedTypeModal(t)}
+                      className="hover:ring-2 hover:ring-rose-400"
+                    />
                   ))
                 ) : (
                   <span className="text-xs text-slate-500 italic">Tidak ada target Resisten</span>
@@ -475,12 +573,19 @@ export const TypeCalculator: React.FC = () => {
                 <XCircle className="w-6 h-6 text-slate-500" />
               </div>
               <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">
-                Damage ditekan drastis akibat kekebalan mekanik Pokémon GO:
+                Damage ditekan drastis akibat kekebalan mekanik Pokémon GO (klik tipe untuk melihat Pokémon terbaik):
               </p>
               <div className="flex flex-wrap gap-2">
                 {attackerResults.noDamage.length > 0 ? (
                   attackerResults.noDamage.map((t) => (
-                    <TypeBadge key={t} type={t} size="sm" showIndonesian />
+                    <TypeBadge
+                      key={t}
+                      type={t}
+                      size="sm"
+                      showIndonesian
+                      onClick={() => setSelectedTypeModal(t)}
+                      className="hover:ring-2 hover:ring-slate-400"
+                    />
                   ))
                 ) : (
                   <span className="text-xs text-slate-500 italic">Tidak ada target Imun</span>
@@ -596,6 +701,14 @@ export const TypeCalculator: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Pop-up Modal: Rekomendasi Pokemon Terbaik & Garis Evolusi */}
+      <TypePokemonModal
+        isOpen={!!selectedTypeModal}
+        type={selectedTypeModal}
+        onClose={() => setSelectedTypeModal(null)}
+        onSelectType={(newType) => setSelectedTypeModal(newType)}
+      />
     </div>
   );
 };

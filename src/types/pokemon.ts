@@ -141,3 +141,37 @@ export interface HoppingScheduleItem {
   timeUntilOrRemaining: string;
   timeDifferenceWibHours: number; // Difference compared to WIB (UTC+7)
 }
+
+export interface EvolutionStageItem {
+  dex: number;
+  name: string;
+  sprite: string;
+  types?: PokemonType[];
+  isCurrent?: boolean;
+}
+
+export interface TypeTopPokemonFamily {
+  dex: number;
+  name: string;
+  types: PokemonType[];
+  sprite: string;
+  officialArtwork?: string;
+  isLegendary?: boolean;
+  isMythical?: boolean;
+  isUltraBeast?: boolean;
+  isMega?: boolean;
+  attack: number;
+  defense: number;
+  stamina: number;
+  maxCp: number;
+  powerScore: number;
+  rankTier: 'S+' | 'S' | 'A+' | 'A' | 'B';
+  evolutionLine: EvolutionStageItem[];
+  evolutionSummary: string;
+  hasEvolution: boolean;
+  recommendedMoves?: {
+    fast: string;
+    charged: string;
+  };
+  roleNote?: string;
+}

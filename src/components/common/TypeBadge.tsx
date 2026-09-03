@@ -120,6 +120,7 @@ export const TypeBadge: React.FC<TypeBadgeProps> = ({
       <button
         type="button"
         onClick={onClick}
+        title={`Klik untuk melihat rekomendasi Pokémon tipe ${type}`}
         className={commonClasses}
         style={styleObj}
       >

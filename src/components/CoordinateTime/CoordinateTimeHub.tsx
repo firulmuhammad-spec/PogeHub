@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { CoordinateSpot, HoppingScheduleItem } from '../../types/pokemon';
 import { DEFAULT_COORDINATES } from '../../data/coordinates';
 import {
@@ -271,12 +271,47 @@ export const CoordinateTimeHub: React.FC = () => {
     return true;
   });
 
+  // Helper to format selected date in Indonesian
+  const formattedSelectedDate = useMemo(() => {
+    try {
+      const [y, m, d] = eventDate.split('-').map(Number);
+      const dt = new Date(y, m - 1, d);
+      return new Intl.DateTimeFormat('id-ID', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      }).format(dt);
+    } catch {
+      return eventDate;
+    }
+  }, [eventDate]);
+
+  const handleDatePreset = (preset: 'today' | 'tomorrow' | 'saturday' | 'sunday') => {
+    const d = new Date();
+    if (preset === 'tomorrow') {
+      d.setDate(d.getDate() + 1);
+    } else if (preset === 'saturday') {
+      const currentDay = d.getDay(); // 0 is Sunday, 6 is Saturday
+      const daysUntilSaturday = (6 - currentDay + 7) % 7 || 7;
+      d.setDate(d.getDate() + daysUntilSaturday);
+    } else if (preset === 'sunday') {
+      const currentDay = d.getDay();
+      const daysUntilSunday = (7 - currentDay) % 7 || 7;
+      d.setDate(d.getDate() + daysUntilSunday);
+    }
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    setEventDate(`${yyyy}-${mm}-${dd}`);
+  };
+
   // Calculate WIB event hopping schedule
   const hoppingSchedule = calculateGlobalHoppingSchedule(
     spots,
     localStartTime,
     durationHours,
-    new Date(eventDate)
+    eventDate
   );
 
   return (
@@ -327,6 +362,62 @@ export const CoordinateTimeHub: React.FC = () => {
       {/* SUB-TAB 1: COORDINATE BOOK & LIVE CLOCKS */}
       {subTab === 'coordinates' && (
         <div className="space-y-6">
+          {/* Info Card: Lokasi Penyimpanan Koordinat & Hotspot Pokémon GO Fest San Francisco */}
+          <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100 font-mono">
+                  Lokasi Penyimpanan Koordinat & Hotspot GO Fest
+                </h3>
+              </div>
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 self-start sm:self-auto">
+                Tersimpan Otomatis & Persisten
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-1">
+                <span className="font-bold text-slate-900 dark:text-slate-100 font-mono flex items-center gap-1.5">
+                  📁 Koordinat Hotspot Bawaan:
+                </span>
+                <p className="text-slate-600 dark:text-slate-400 text-[11px] leading-relaxed">
+                  Tersimpan di basis data aplikasi (<code>src/data/coordinates.ts</code>). Memuat titik resmi <strong>Pokémon GO Fest San Francisco (Fort Mason Center & Pier 39)</strong>, New York, Zaragoza, Tokyo, dan kota-kota besar lainnya.
+                </p>
+              </div>
+
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-1">
+                <span className="font-bold text-slate-900 dark:text-slate-100 font-mono flex items-center gap-1.5">
+                  💾 Koordinat Kustom Pengguna:
+                </span>
+                <p className="text-slate-600 dark:text-slate-400 text-[11px] leading-relaxed">
+                  Tersimpan aman di <strong>Browser LocalStorage</strong> perangkat Anda (<code>pokego_custom_coordinates_v1</code>). Titik yang Anda tambahkan tidak akan pernah hilang meskipun browser di-refresh.
+                </p>
+              </div>
+            </div>
+
+            {/* Quick Filter: San Francisco GO Fest Hotspots */}
+            <div className="pt-1 flex flex-wrap items-center gap-2 text-xs">
+              <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 font-mono">Pintas Cepat Hotspot GO Fest:</span>
+              <button
+                type="button"
+                onClick={() => setSearchCoords('San Francisco')}
+                className="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 transition cursor-pointer flex items-center gap-1"
+              >
+                <span>🌉 Filter San Francisco GO Fest ({spots.filter(s => s.city.includes('San Francisco')).length} Spot)</span>
+              </button>
+              {searchCoords && (
+                <button
+                  type="button"
+                  onClick={() => setSearchCoords('')}
+                  className="px-2 py-1 rounded-lg text-xs font-mono text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+                >
+                  ✕ Reset Filter ({filteredSpots.length} ditampilkan)
+                </button>
+              )}
+            </div>
+          </div>
+
           {/* Controls Bar: Search + Category + Add Custom Spot */}
           <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col sm:flex-row gap-3 items-center justify-between">
             <div className="relative w-full sm:w-80">
@@ -490,22 +581,41 @@ export const CoordinateTimeHub: React.FC = () => {
             <div>
               <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2 font-mono">
                 <Calendar className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                Konfigurasi Jam Event Global Pokémon GO
+                Konfigurasi Tanggal & Jam Event Global Pokémon GO
               </h3>
               <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 font-medium">
-                Masukkan jam lokal diadakannya event (misal Community Day jam 14:00 - 17:00 waktu setempat). Aplikasi otomatis menghitung jam tayang dalam <strong>Waktu Indonesia Barat (WIB)</strong> dan mengurutkannya dari yang paling pagi!
+                Pilih tanggal dan jam lokal diadakannya event (misal Community Day jam 14:00 - 17:00 waktu setempat). Aplikasi memproyeksikan harinya secara akurat ke <strong>Waktu Indonesia Barat (WIB)</strong> agar jadwal raid tidak tertukar dengan hari sebelum atau setelahnya!
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-2">
-              <div className="sm:col-span-2 space-y-1.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-2">
+              <div className="space-y-1.5">
                 <label className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono">Nama Event:</label>
                 <input
                   type="text"
                   value={eventName}
                   onChange={(e) => setEventName(e.target.value)}
-                  placeholder="Contoh: Community Day, Raid Day, Spotlight Hour..."
+                  placeholder="Contoh: Community Day, Raid Day, GO Fest..."
                   className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-mono"
+                />
+              </div>
+
+              {/* Tanggal Event Selector with Live Day Name Display */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono flex items-center gap-1">
+                    <Calendar className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                    <span>Tanggal Event:</span>
+                  </label>
+                  <span className="text-[11px] font-mono font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-300 dark:border-emerald-700">
+                    {formattedSelectedDate.split(',')[0]}
+                  </span>
+                </div>
+                <input
+                  type="date"
+                  value={eventDate}
+                  onChange={(e) => setEventDate(e.target.value)}
+                  className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-mono font-bold"
                 />
               </div>
 
@@ -515,12 +625,12 @@ export const CoordinateTimeHub: React.FC = () => {
                   type="time"
                   value={localStartTime}
                   onChange={(e) => setLocalStartTime(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-mono"
+                  className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-mono font-bold"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono">Durasi (Jam):</label>
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono">Durasi Event:</label>
                 <select
                   value={durationHours}
                   onChange={(e) => setDurationHours(parseInt(e.target.value, 10))}
@@ -531,6 +641,98 @@ export const CoordinateTimeHub: React.FC = () => {
                   <option value={8}>8 Jam (GO Fest / Safari)</option>
                   <option value={10}>10 Jam (Special Raid / Ultra Unlock)</option>
                 </select>
+              </div>
+            </div>
+
+            {/* Quick Date Presets */}
+            <div className="pt-1 flex flex-wrap items-center gap-2 text-xs">
+              <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 font-mono">Pilihan Tanggal Cepat:</span>
+              <button
+                type="button"
+                onClick={() => handleDatePreset('today')}
+                className="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-slate-100 dark:bg-slate-800 hover:bg-emerald-100 dark:hover:bg-emerald-950/80 hover:text-emerald-700 dark:hover:text-emerald-300 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 transition cursor-pointer"
+              >
+                Hari Ini
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDatePreset('tomorrow')}
+                className="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-slate-100 dark:bg-slate-800 hover:bg-emerald-100 dark:hover:bg-emerald-950/80 hover:text-emerald-700 dark:hover:text-emerald-300 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 transition cursor-pointer"
+              >
+                Besok
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDatePreset('saturday')}
+                className="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-slate-100 dark:bg-slate-800 hover:bg-emerald-100 dark:hover:bg-emerald-950/80 hover:text-emerald-700 dark:hover:text-emerald-300 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 transition cursor-pointer"
+              >
+                Sabtu Mendatang
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDatePreset('sunday')}
+                className="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-slate-100 dark:bg-slate-800 hover:bg-emerald-100 dark:hover:bg-emerald-950/80 hover:text-emerald-700 dark:hover:text-emerald-300 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 transition cursor-pointer"
+              >
+                Minggu Mendatang
+              </button>
+            </div>
+
+            {/* Proyeksi Hari & Jam WIB (Day Projection Box) */}
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-2.5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div className="flex items-center gap-2 font-mono text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span>Proyeksi Hari: <span className="text-emerald-700 dark:text-emerald-400 underline decoration-emerald-500/50">{formattedSelectedDate}</span></span>
+                </div>
+                <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400">
+                  Jam Lokal Event: <strong>{localStartTime}</strong> ({durationHours} Jam)
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 font-mono text-xs">
+                <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800">
+                  <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider block">
+                    1. Mulai Pertama di Dunia:
+                  </span>
+                  <div className="text-slate-900 dark:text-slate-100 font-bold mt-1">
+                    {hoppingSchedule[0]?.spot.name.split('-')[0] || hoppingSchedule[0]?.spot.city}
+                  </div>
+                  <div className="text-emerald-700 dark:text-emerald-300 font-extrabold text-xs mt-0.5">
+                    {hoppingSchedule[0]?.wibDateStr}, {hoppingSchedule[0]?.wibStart} WIB
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800">
+                  <span className="text-[10px] font-bold text-teal-700 dark:text-teal-400 uppercase tracking-wider block">
+                    2. Tayang di Indonesia (WIB):
+                  </span>
+                  <div className="text-slate-900 dark:text-slate-100 font-bold mt-1">
+                    Monas, Jakarta (WIB)
+                  </div>
+                  <div className="text-teal-700 dark:text-teal-300 font-extrabold text-xs mt-0.5">
+                    {formattedSelectedDate.split(',')[0]}, {localStartTime} WIB
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800">
+                  <span className="text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider block">
+                    3. Berakhir Terakhir di Dunia:
+                  </span>
+                  <div className="text-slate-900 dark:text-slate-100 font-bold mt-1">
+                    {hoppingSchedule[hoppingSchedule.length - 1]?.spot.city} (USA / Hawaii)
+                  </div>
+                  <div className="text-amber-700 dark:text-amber-300 font-extrabold text-xs mt-0.5 flex items-center gap-1">
+                    <span>{hoppingSchedule[hoppingSchedule.length - 1]?.wibDateStr}, {hoppingSchedule[hoppingSchedule.length - 1]?.wibEnd} WIB</span>
+                    <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-200 dark:bg-amber-900 text-amber-950 dark:text-amber-200 font-bold">H+1!</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-[11px] text-slate-600 dark:text-slate-400 font-medium flex items-start gap-1.5 pt-0.5">
+                <Info className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                <span>
+                  <strong>Penting (Anti-Tertukar Hari):</strong> Wilayah belahan barat Amerika (seperti <strong>San Francisco GO Fest</strong>, Los Angeles, dan Hawaii) bergeser ke <strong>Keesokan Harinya (H+1)</strong> di Waktu Indonesia Barat (WIB). Cek label <strong className="text-amber-700 dark:text-amber-400">H+1</strong> di tabel bawah saat merencanakan raid agar tidak salah hari!
+                </span>
               </div>
             </div>
           </div>
@@ -560,8 +762,8 @@ export const CoordinateTimeHub: React.FC = () => {
                   <tr className="border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider font-mono">
                     <th className="py-3 px-3">No & Lokasi Hotspot</th>
                     <th className="py-3 px-3 text-emerald-700 dark:text-emerald-400">Zona UTC & Selisih</th>
-                    <th className="py-3 px-3">Jam Lokal</th>
-                    <th className="py-3 px-3 text-amber-700 dark:text-amber-400">Jadwal di WIB (UTC+7)</th>
+                    <th className="py-3 px-3">Hari & Jam Lokal</th>
+                    <th className="py-3 px-3 text-amber-700 dark:text-amber-400">Jadwal di WIB & Proyeksi Hari</th>
                     <th className="py-3 px-3">Status Event</th>
                     <th className="py-3 px-3 text-right">Koordinat</th>
                   </tr>
@@ -637,7 +839,11 @@ export const CoordinateTimeHub: React.FC = () => {
                         </td>
 
                         <td className="py-3 px-3 font-mono text-slate-800 dark:text-slate-200">
-                          <div className="font-bold">{item.localStart} - {item.localEnd}</div>
+                          <div className="font-bold text-sm">{item.localStart} - {item.localEnd}</div>
+                          <div className="text-[11px] text-emerald-700 dark:text-emerald-400 font-bold flex items-center gap-1">
+                            <Calendar className="w-3 h-3" />
+                            <span>{item.localDateStr || 'Hari Event'}</span>
+                          </div>
                           <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Waktu Kota Setempat</div>
                         </td>
 
@@ -645,7 +851,31 @@ export const CoordinateTimeHub: React.FC = () => {
                           <div className="font-bold text-amber-700 dark:text-amber-400 text-sm">
                             {item.wibStart} - {item.wibEnd} WIB
                           </div>
-                          <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">{item.wibDateStr}</div>
+                          <div className="text-[11px] font-bold text-slate-900 dark:text-slate-100 mt-0.5">
+                            {item.wibDateStr}
+                          </div>
+                          <div className="mt-1">
+                            {item.dayDifferenceDays === 0 && (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700">
+                                ✓ Hari Sama
+                              </span>
+                            )}
+                            {item.dayDifferenceDays === 1 && (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-black bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 border border-amber-300 dark:border-amber-700">
+                                ⚠️ H+1 (Besoknya di WIB)
+                              </span>
+                            )}
+                            {item.dayDifferenceDays !== undefined && item.dayDifferenceDays > 1 && (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-black bg-rose-100 dark:bg-rose-950 text-rose-900 dark:text-rose-300 border border-rose-300 dark:border-rose-700">
+                                ⚠️ +{item.dayDifferenceDays} Hari di WIB
+                              </span>
+                            )}
+                            {item.dayDifferenceDays !== undefined && item.dayDifferenceDays < 0 && (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-purple-100 dark:bg-purple-950 text-purple-900 dark:text-purple-300 border border-purple-300 dark:border-purple-700">
+                                {item.dayDifferenceLabel}
+                              </span>
+                            )}
+                          </div>
                         </td>
 
                         <td className="py-3 px-3">{statusBadge}</td>

@@ -129,7 +129,7 @@ export function calculateGlobalHoppingSchedule(
   spots: CoordinateSpot[],
   localStartTimeStr: string = '14:00',
   durationHours: number = 3,
-  baseDate: Date = new Date()
+  baseDate: Date | string = new Date()
 ): HoppingScheduleItem[] {
   const [startHourStr, startMinStr] = localStartTimeStr.split(':');
   const startHour = parseInt(startHourStr || '14', 10);
@@ -137,9 +137,27 @@ export function calculateGlobalHoppingSchedule(
 
   const now = new Date();
 
-  const year = baseDate.getFullYear();
-  const month = baseDate.getMonth(); // 0-indexed
-  const day = baseDate.getDate();
+  let year: number;
+  let month: number;
+  let day: number;
+
+  if (typeof baseDate === 'string') {
+    const parts = baseDate.split('-');
+    if (parts.length === 3) {
+      year = parseInt(parts[0], 10);
+      month = parseInt(parts[1], 10) - 1;
+      day = parseInt(parts[2], 10);
+    } else {
+      const d = new Date(baseDate);
+      year = d.getFullYear();
+      month = d.getMonth();
+      day = d.getDate();
+    }
+  } else {
+    year = baseDate.getFullYear();
+    month = baseDate.getMonth();
+    day = baseDate.getDate();
+  }
 
   const items: HoppingScheduleItem[] = spots.map((spot) => {
     try {
@@ -172,9 +190,40 @@ export function calculateGlobalHoppingSchedule(
         month: 'short',
       });
 
+      const localDateFormatter = new Intl.DateTimeFormat('id-ID', {
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short',
+      });
+
       const wibStart = wibTimeFormatter.format(eventStartDate);
       const wibEnd = wibTimeFormatter.format(eventEndDate);
       const wibDateStr = wibDateFormatter.format(eventStartDate);
+      const localDateStr = localDateFormatter.format(new Date(year, month, day));
+
+      // Day relationship between local event date and WIB date
+      const wibIsoDate = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Jakarta',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }).format(eventStartDate);
+      const [wY, wM, wD] = wibIsoDate.split('-').map((v) => parseInt(v, 10));
+
+      const localDayEpoch = Math.floor(Date.UTC(year, month, day) / 86400000);
+      const wibDayEpoch = Math.floor(Date.UTC(wY, wM - 1, wD) / 86400000);
+      const dayDifferenceDays = wibDayEpoch - localDayEpoch;
+
+      let dayDifferenceLabel = 'Hari Sama';
+      if (dayDifferenceDays === 1) {
+        dayDifferenceLabel = 'H+1 (Besoknya di WIB)';
+      } else if (dayDifferenceDays > 1) {
+        dayDifferenceLabel = `+${dayDifferenceDays} Hari di WIB`;
+      } else if (dayDifferenceDays === -1) {
+        dayDifferenceLabel = 'H-1 (Kemarin di WIB)';
+      } else if (dayDifferenceDays < -1) {
+        dayDifferenceLabel = `${dayDifferenceDays} Hari di WIB`;
+      }
 
       // 5. Local end formatted string
       const endTotalMin = startHour * 60 + startMin + durationHours * 60;
@@ -223,6 +272,9 @@ export function calculateGlobalHoppingSchedule(
         wibStart,
         wibEnd,
         wibDateStr,
+        localDateStr,
+        dayDifferenceDays,
+        dayDifferenceLabel,
         utcOffsetStr,
         utcOffsetMinutes: spotOffsetMin,
         startTimestampWib: actualEventStartUtcMs,
@@ -239,6 +291,9 @@ export function calculateGlobalHoppingSchedule(
         wibStart: '14:00',
         wibEnd: '17:00',
         wibDateStr: 'Hari Ini',
+        localDateStr: 'Hari Ini',
+        dayDifferenceDays: 0,
+        dayDifferenceLabel: 'Hari Sama',
         utcOffsetStr: 'UTC+7',
         utcOffsetMinutes: 420,
         startTimestampWib: Date.now(),

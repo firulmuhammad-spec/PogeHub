@@ -133,6 +133,9 @@ export interface HoppingScheduleItem {
   wibStart: string;
   wibEnd: string;
   wibDateStr: string;
+  localDateStr?: string;
+  dayDifferenceDays?: number; // 0 = same day, 1 = +1 day in WIB, -1 = -1 day
+  dayDifferenceLabel?: string;
   utcOffsetStr: string; // e.g. "UTC+7", "UTC-4", "UTC+12"
   utcOffsetMinutes: number; // in minutes
   startTimestampWib: number;
